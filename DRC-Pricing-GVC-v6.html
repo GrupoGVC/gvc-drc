@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="api-client.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="api-client.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.1/jspdf.plugin.autotable.min.js">
 
 // ═══════════════════════════════════════════════════════════
@@ -77,7 +77,6 @@
 [data-theme="light"] .form-section { box-shadow: var(--shadow); }
 [data-theme="light"] .coleta-block { background: #f7f8fa; }
 [data-theme="light"] .tax-badge { background: rgba(59,158,255,0.06); }
-
 
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -753,7 +752,6 @@ input.manual-input.manual-filled {
     <button class="hbtn" id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
   </div>
 </header>
-
 
 
 <!-- STATUS MODAL -->
@@ -1901,7 +1899,6 @@ function renderColeta(c, i) {
         <div class="field"><label>Kit Bomba Sucção (R$)</label><input type="number" value="${c.kitBomba||0}" oninput="updateColeta('${c.id}','kitBomba',this.value)" step="0.01" min="0"></div>
       </div>
 
-
       <div class="coleta-result">
         ${(c.numViagens||1) > 1 ? `<div class="cr-item" style="background:rgba(59,158,255,0.08);border-radius:6px;padding:6px 10px;"><span class="cr-label" style="color:var(--blue);">🔁 Nº de Viagens</span><span class="cr-val" style="color:var(--blue);font-weight:700;">${c.numViagens}×</span></div>` : ''}
         <div class="cr-item"><span class="cr-label">Combustível</span><span class="cr-val">${fmt(rc.diesel)}</span></div>
@@ -2075,7 +2072,6 @@ function renderOpRow(o, i) {
     + '<td><button class="del-btn" onclick="removeOp(\'' + oid + '\')">&#x2715;</button></td>'
     + '</tr>';
 }
-
 
 // ═══════════════════════════════════════════════════════════
 // UPDATE HANDLERS
@@ -2434,7 +2430,6 @@ function generateMapUrl(id) {
   toast('🗺 Rota carregada: ' + points.length + ' pontos', '#00c896');
 }
 
-
 // Sincroniza campo Distância Total entre aba Mapa e aba Dados
 function syncDistancia(id, val) {
   updateColeta(id, 'distanciaTotal', val);
@@ -2458,7 +2453,6 @@ function applyMapUrl(id) {
     wrap.innerHTML = '<div class="map-placeholder"><span>🗺</span><div style="font-size:0.8rem;">Nenhum mapa carregado</div><div style="font-size:0.7rem;color:var(--text-dim);">Cole a URL do Google Maps acima e clique em Carregar</div></div>';
   }
 }
-
 
 function updateColeta(id, field, value) {
   if (!currentDRC) return;
@@ -2563,7 +2557,6 @@ function updateOpCusto(id, value) {
   if (elRec) elRec.textContent = fmt(rec);
   refreshResults();
 }
-
 
 function updateLoc(id, field, value) {
   if (!currentDRC) return;
@@ -2952,7 +2945,6 @@ function exportPDF() {
   toast('📄 PDF Comercial gerado com sucesso', '#00c896');
 }
 
-
 // ═══════════════════════════════════════════════════════════
 // PDF OPERAÇÃO
 // ═══════════════════════════════════════════════════════════
@@ -3204,7 +3196,6 @@ function exportPDFOperacao() {
       y += blockH + 3 + 4;
     });
   }
-
 
   // ── DATA PREVISTA DE EXECUÇÃO ─────────────
   {
@@ -3658,7 +3649,6 @@ function syncJustText(val) {
 }
 
 
-
 function confirmStatusChange() {
   if (!pendingStatus || !currentDRC) return;
   const meta = STATUS_META[pendingStatus];
@@ -3696,7 +3686,6 @@ function confirmStatusChange() {
   renderList();
   toast(`${meta.icon} Status atualizado: ${meta.label}`, meta.color);
 }
-
 
 // ── THEME TOGGLE ──────────────────────────────────────────
 function toggleMobileSidebar() {
