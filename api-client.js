@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════
 
 // ── CONFIGURE AQUI a URL da sua API no VPS ──────────
-const API_BASE = 'http://72.61.42.148/api.php';
+const API_BASE = 'https://72.61.42.148/api.php';
 // ────────────────────────────────────────────────────
 
 // Token armazenado em sessionStorage (não persiste entre abas diferentes)
