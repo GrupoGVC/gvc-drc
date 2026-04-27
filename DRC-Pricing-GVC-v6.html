@@ -7,23 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="api-client.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.1/jspdf.plugin.autotable.min.js">
-
-// ═══════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════
-(async () => {
-  const user = await requireAuth(['gestor']);
-  if (!user) return;
-  const udisp = document.getElementById('user-display');
-  if (udisp) udisp.textContent = '👤 ' + user.nome;
-  const blogout = document.getElementById('btn-logout');
-  if (blogout) blogout.style.display = 'flex';
-  await _loadAsync();
-  populateFilterSelects();
-})();
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.1/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root {
   --bg: #0a0d0f;
@@ -77,6 +61,7 @@
 [data-theme="light"] .form-section { box-shadow: var(--shadow); }
 [data-theme="light"] .coleta-block { background: #f7f8fa; }
 [data-theme="light"] .tax-badge { background: rgba(59,158,255,0.06); }
+
 
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -749,9 +734,12 @@ input.manual-input.manual-filled {
     <button class="hbtn primary" onclick="exportPDFOperacao()" id="btn-pdf-op">📋 PDF Operação</button>
     <button class="hbtn" onclick="openCadastros()" title="Gerenciar cadastros">⚙ Cadastros</button>
     <button class="hbtn" onclick="window.open('drc-operacional.html','_blank')" title="Módulo Operacional" style="border-color:rgba(167,139,250,0.4);color:#a78bfa;">⚙ Operacional</button>
+    <span id="user-display" style="font-family:monospace;font-size:.65rem;color:#5a6577;margin-left:4px;"></span>
+    <button id="btn-logout" class="hbtn" onclick="GvcAuth.logout()" style="display:none;color:#f87171;border-color:rgba(248,113,113,.3);">⏻ Sair</button>
     <button class="hbtn" id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
   </div>
 </header>
+
 
 
 <!-- STATUS MODAL -->
@@ -1079,11 +1067,7 @@ const CONSUMO_VEICULO = { // km/litro
 // ═══════════════════════════════════════════════════════════
 // STORAGE
 // ═══════════════════════════════════════════════════════════
-function load() {
-  // Async wrapper mantém compatibilidade com chamadas síncronas existentes
-  return _loadAsync();
-}
-async function _loadAsync() {
+async function load() {
   try {
     const rows = await GvcDRC.list();
     drcs = rows.map(r => ({
@@ -1093,30 +1077,30 @@ async function _loadAsync() {
       unidadeAtendimento: r.unidade, status: r.status,
       statusHistorico: [], coletas: [], destinacoes: [], locacoes: [], opEspeciais: [],
     }));
-    drcCounter = drcs.length > 0 ? parseInt(drcs[0].numero?.replace(/\D/g,'')) || drcs.length : 0;
-  } catch(e) { console.error('Erro ao carregar DRCs:', e); drcs = []; drcCounter = 0; }
+    drcCounter = drcs.length;
+  } catch(e) { console.error('load error:', e); drcs = []; drcCounter = 0; }
   try {
     const c = await GvcCadastros.get();
     if (c) {
       cadastros = c;
-      if (!cadastros.categorias)    cadastros.categorias    = ['Coleta e Transporte', 'Tratamento / Destinação', 'Locação de Equipamentos', 'Consultoria / Laudos', 'Operações Especiais'];
+      if (!cadastros.categorias)     cadastros.categorias     = [];
       if (!cadastros.justificativas) cadastros.justificativas = [];
       if (!cadastros.empresasLogos)  cadastros.empresasLogos  = {};
-      if (!cadastros.usuarios)        cadastros.usuarios        = [];
-      DEFAULT_EMPRESAS.forEach(e => { if (!cadastros.empresas.includes(e)) cadastros.empresas.push(e); });
-      cadastros.empresas = cadastros.empresas.filter(e => e !== 'Retec Resíduos');
+      if (!cadastros.usuarios)       cadastros.usuarios       = [];
     }
-  } catch(e) { console.error('Erro ao carregar cadastros:', e); }
+  } catch(e) { console.error('load cadastros error:', e); }
 }
+
 async function save() {
   const idx = drcs.findIndex(d => d.id === currentDRC?.id);
   if (idx >= 0) drcs[idx] = currentDRC;
   try { await GvcDRC.save(currentDRC); }
   catch(e) { toast('❌ Erro ao salvar: ' + e.message, '#f87171'); }
 }
+
 async function saveCadastros() {
   try { await GvcCadastros.save(cadastros); }
-  catch(e) { toast('❌ Erro ao salvar cadastros: ' + e.message, '#f87171'); }
+  catch(e) { toast("❌ Erro ao salvar cadastros: " + e.message, "#f87171"); }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1533,14 +1517,11 @@ function clearAllFilters() {
 // FORM RENDER
 // ═══════════════════════════════════════════════════════════
 async function selectDRC(id) {
-  // Load full DRC data from API (list only has meta fields)
   try {
     currentDRC = await GvcDRC.get(id);
     const idx = drcs.findIndex(d => d.id === id);
     if (idx >= 0) drcs[idx] = { ...drcs[idx], ...currentDRC };
-  } catch(e) {
-    currentDRC = drcs.find(d => d.id === id);
-  }
+  } catch(e) { currentDRC = drcs.find(d => d.id === id); }
   if (!currentDRC) return;
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('drc-form').style.display = 'block';
@@ -1899,6 +1880,7 @@ function renderColeta(c, i) {
         <div class="field"><label>Kit Bomba Sucção (R$)</label><input type="number" value="${c.kitBomba||0}" oninput="updateColeta('${c.id}','kitBomba',this.value)" step="0.01" min="0"></div>
       </div>
 
+
       <div class="coleta-result">
         ${(c.numViagens||1) > 1 ? `<div class="cr-item" style="background:rgba(59,158,255,0.08);border-radius:6px;padding:6px 10px;"><span class="cr-label" style="color:var(--blue);">🔁 Nº de Viagens</span><span class="cr-val" style="color:var(--blue);font-weight:700;">${c.numViagens}×</span></div>` : ''}
         <div class="cr-item"><span class="cr-label">Combustível</span><span class="cr-val">${fmt(rc.diesel)}</span></div>
@@ -2072,6 +2054,7 @@ function renderOpRow(o, i) {
     + '<td><button class="del-btn" onclick="removeOp(\'' + oid + '\')">&#x2715;</button></td>'
     + '</tr>';
 }
+
 
 // ═══════════════════════════════════════════════════════════
 // UPDATE HANDLERS
@@ -2341,9 +2324,9 @@ function autoSave() {
   var idx = drcs.findIndex(function(d){ return d.id === currentDRC.id; });
   if (idx >= 0) drcs[idx] = currentDRC;
   try {
-    GvcDRC.save(currentDRC).catch(e => console.warn('autoSave error:', e));
+    if(currentDRC) GvcDRC.save(currentDRC).catch(()=>{});
   } catch(e) {
-    console.warn('autoSave API error:', e);
+    console.warn('autoSave error:', e);
   }
   renderList();
 }
@@ -2430,6 +2413,7 @@ function generateMapUrl(id) {
   toast('🗺 Rota carregada: ' + points.length + ' pontos', '#00c896');
 }
 
+
 // Sincroniza campo Distância Total entre aba Mapa e aba Dados
 function syncDistancia(id, val) {
   updateColeta(id, 'distanciaTotal', val);
@@ -2453,6 +2437,7 @@ function applyMapUrl(id) {
     wrap.innerHTML = '<div class="map-placeholder"><span>🗺</span><div style="font-size:0.8rem;">Nenhum mapa carregado</div><div style="font-size:0.7rem;color:var(--text-dim);">Cole a URL do Google Maps acima e clique em Carregar</div></div>';
   }
 }
+
 
 function updateColeta(id, field, value) {
   if (!currentDRC) return;
@@ -2557,6 +2542,7 @@ function updateOpCusto(id, value) {
   if (elRec) elRec.textContent = fmt(rec);
   refreshResults();
 }
+
 
 function updateLoc(id, field, value) {
   if (!currentDRC) return;
@@ -2945,6 +2931,7 @@ function exportPDF() {
   toast('📄 PDF Comercial gerado com sucesso', '#00c896');
 }
 
+
 // ═══════════════════════════════════════════════════════════
 // PDF OPERAÇÃO
 // ═══════════════════════════════════════════════════════════
@@ -3196,6 +3183,7 @@ function exportPDFOperacao() {
       y += blockH + 3 + 4;
     });
   }
+
 
   // ── DATA PREVISTA DE EXECUÇÃO ─────────────
   {
@@ -3511,12 +3499,12 @@ function moveCadastroItem(i, dir) {
 // STATUS SYSTEM
 // ═══════════════════════════════════════════════════════════
 const STATUS_META = {
-  rascunho:             { label: 'Rascunho',              icon: '📝', color: '#8898aa', neg: false, desc: 'DRC em elaboração, ainda não enviado' },
-  enviado:              { label: 'Enviado',               icon: '📤', color: '#3b9eff', neg: false, desc: 'Enviado ao consultor interno para análise' },
-  em_analise:           { label: 'Em Análise',            icon: '🔍', color: '#f5a623', neg: false, desc: 'Consultor está avaliando a proposta' },
-  aprovado:             { label: 'Aprovado',              icon: '✅', color: '#00c896', neg: false, desc: 'Proposta aprovada pelo consultor' },
-  reprovado:            { label: 'Reprovado',             icon: '❌', color: '#e84393', neg: true,  desc: 'Proposta reprovada — justificativa obrigatória' },
-  cancelado:            { label: 'Cancelado',             icon: '🚫', color: '#e06060', neg: true,  desc: 'DRC cancelado — justificativa obrigatória' },
+  rascunho:   { label: 'Rascunho',    icon: '📝', color: '#8898aa', neg: false, desc: 'DRC em elaboração, ainda não enviado' },
+  enviado:    { label: 'Enviado',     icon: '📤', color: '#3b9eff', neg: false, desc: 'Enviado ao consultor interno para análise' },
+  em_analise: { label: 'Em Análise',  icon: '🔍', color: '#f5a623', neg: false, desc: 'Consultor está avaliando a proposta' },
+  aprovado:   { label: 'Aprovado',    icon: '✅', color: '#00c896', neg: false, desc: 'Proposta aprovada pelo consultor' },
+  reprovado:  { label: 'Reprovado',   icon: '❌', color: '#e84393', neg: true,  desc: 'Proposta reprovada — justificativa obrigatória' },
+  cancelado:  { label: 'Cancelado',   icon: '🚫', color: '#e06060', neg: true,  desc: 'DRC cancelado — justificativa obrigatória' },
   aguardando_execucao:  { label: 'Aguardando Execução',   icon: '⏳', color: '#a78bfa', neg: false, desc: 'Aguardando confirmação de data pelo setor operacional' },
   validacao_custos:     { label: 'Validação de Custos',   icon: '🔎', color: '#fb923c', neg: false, desc: 'Em validação dos custos reais pelo setor operacional' },
   concluido:            { label: 'Concluído',             icon: '🏁', color: '#22d3ee', neg: false, desc: 'DRC executado e custos validados pelo operacional' },
@@ -3649,6 +3637,7 @@ function syncJustText(val) {
 }
 
 
+
 function confirmStatusChange() {
   if (!pendingStatus || !currentDRC) return;
   const meta = STATUS_META[pendingStatus];
@@ -3686,6 +3675,7 @@ function confirmStatusChange() {
   renderList();
   toast(`${meta.icon} Status atualizado: ${meta.label}`, meta.color);
 }
+
 
 // ── THEME TOGGLE ──────────────────────────────────────────
 function toggleMobileSidebar() {
@@ -4212,19 +4202,45 @@ const MUN_UF_TABLE = [
 // ═══════════════════════════════════════════════════════════
 // MODAL — ABRIR DRC
 // ═══════════════════════════════════════════════════════════
-async function importFromJSON(jsonStr) {
-  try {
-    const data = JSON.parse(jsonStr);
-    const drcsToImport = data.drcs || [];
-    let count = 0;
-    for (const drc of drcsToImport) {
-      await GvcDRC.save(drc);
-      count++;
-    }
-    await _loadAsync();
-    renderList();
-    toast('✅ ' + count + ' DRCs importados com sucesso', '#00c896');
-  } catch(e) {
-    toast('❌ Erro na importação: ' + e.message, '#f87171');
+function onMunUFChange(val) {
+  if (!currentDRC) return;
+  currentDRC.munUF = val;
+  const row = MUN_UF_TABLE.find(r => r.mun === val);
+  if (row) {
+    currentDRC.cluster = row.cluster;
+    currentDRC.unidadeAtendimento = row.unidade;
+  } else {
+    currentDRC.cluster = '';
+    currentDRC.unidadeAtendimento = '';
   }
+  autoSave();
+  // Re-render only the identification fields
+  const clusterSel = document.getElementById('field-cluster');
+  const unidadeSel = document.getElementById('field-unidadeAtendimento');
+  if (clusterSel) clusterSel.value = currentDRC.cluster || '';
+  if (unidadeSel) unidadeSel.value = currentDRC.unidadeAtendimento || '';
 }
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// SEED: DRC EMAPE — importado da planilha 44_DCR_EMAPE_REVISÃO_V4
+// Executado apenas uma vez; não sobrescreve dados existentes.
+// Seed de demonstração removido em produção
+
+(async () => {
+  const user = await requireAuth(['gestor']);
+  if (!user) return;
+  const udisp = document.getElementById('user-display');
+  if (udisp) udisp.textContent = '👤 ' + user.nome;
+  const blogout = document.getElementById('btn-logout');
+  if (blogout) blogout.style.display = 'flex';
+  await load();
+  renderList();
+  populateFilterSelects();
+})();
+</script>
+
+</body>
+</html>
