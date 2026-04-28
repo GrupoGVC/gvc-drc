@@ -7,11 +7,11 @@
 const API_BASE = 'https://api.drc-gvc.tech/api.php';
 // ────────────────────────────────────────────────────
 
-// Token armazenado em sessionStorage (não persiste entre abas diferentes)
-const _getToken  = ()    => sessionStorage.getItem('gvc_token');
-const _setToken  = (t)   => sessionStorage.setItem('gvc_token', t);
-const _clearAuth = ()    => { sessionStorage.removeItem('gvc_token'); sessionStorage.removeItem('gvc_user'); };
-const getUser    = ()    => { try { return JSON.parse(sessionStorage.getItem('gvc_user')); } catch { return null; } };
+// Token armazenado em localStorage (persiste entre páginas do mesmo domínio)
+const _getToken  = ()    => localStorage.getItem('gvc_token');
+const _setToken  = (t)   => localStorage.setItem('gvc_token', t);
+const _clearAuth = ()    => { localStorage.removeItem('gvc_token'); localStorage.removeItem('gvc_user'); };
+const getUser    = ()    => { try { return JSON.parse(localStorage.getItem('gvc_user')); } catch { return null; } };
 
 // ── Requisição base ──────────────────────────────────
 async function _req(action, method = 'GET', body = null) {
@@ -36,7 +36,7 @@ const GvcAuth = {
   async login(email, senha) {
     const data = await _req('login', 'POST', { email, senha });
     _setToken(data.token);
-    sessionStorage.setItem('gvc_user', JSON.stringify({ nome: data.nome, role: data.role }));
+    localStorage.setItem('gvc_user', JSON.stringify({ nome: data.nome, role: data.role }));
     return data;
   },
   async logout() {
@@ -49,7 +49,7 @@ const GvcAuth = {
     if (!token) return null;
     try {
       const data = await _req('me', 'GET');
-      sessionStorage.setItem('gvc_user', JSON.stringify(data));
+      localStorage.setItem('gvc_user', JSON.stringify(data));
       return data;
     } catch {
       _clearAuth();
