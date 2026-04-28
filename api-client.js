@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════
 
 // ── CONFIGURE AQUI a URL da sua API no VPS ──────────
-const API_BASE = 'https://api.drc-gvc.tech/api.php';
+const API_BASE = 'https://SEU_DOMINIO_OU_IP/api.php';
 // ────────────────────────────────────────────────────
 
 // Token armazenado em sessionStorage (não persiste entre abas diferentes)
@@ -95,11 +95,19 @@ const GvcUsuarios = {
   async list() {
     return await _req('list_usuarios', 'GET');
   },
-  async create(nome, email, senha, role) {
-    return await _req('create_usuario', 'POST', { nome, email, senha, role });
+  async create(nome, email, senha, role, unidade='') {
+    return await _req('create_usuario', 'POST', { nome, email, senha, role, unidade });
+  },
+  async update(id, nome, email, role, unidade='', nova_senha=null) {
+    const payload = { id, nome, email, role, unidade };
+    if (nova_senha) payload.nova_senha = nova_senha;
+    return await _req('update_usuario', 'POST', payload);
   },
   async toggle(id) {
     return await _req('toggle_usuario', 'POST', { id });
+  },
+  async delete(id) {
+    return await _req(`delete_usuario&id=${encodeURIComponent(id)}`, 'DELETE');
   },
   async changeSenha(senha_atual, senha_nova) {
     return await _req('change_senha', 'POST', { senha_atual, senha_nova });
