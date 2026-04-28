@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════
 
 // ── CONFIGURE AQUI a URL da sua API no VPS ──────────
-const API_BASE = 'https://grupogvc.github.io/gvc-drc/api-client.js';
+const API_BASE = 'https://api.drc-gvc.tech/api.php';
 // ────────────────────────────────────────────────────
 
 // Token armazenado em localStorage (persiste entre páginas do mesmo domínio)
