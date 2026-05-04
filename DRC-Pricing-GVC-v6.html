@@ -816,7 +816,18 @@ input.manual-input.manual-filled {
         <div style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;letter-spacing:0.1em;color:var(--retec);text-transform:uppercase;">Cadastros do Sistema</div>
         <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Gerencie as opções disponíveis nos formulários</div>
       </div>
-      <button onclick="closeCadastros()" style="margin-left:auto;background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;">✕</button>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+        <button onclick="window.open('https://grupogvc.github.io/gvc-drc/admin-usuarios.html','_blank')" style="
+          padding:6px 14px;border-radius:7px;border:1px solid rgba(167,139,250,.35);
+          background:rgba(167,139,250,.08);color:#a78bfa;font-family:var(--font);
+          font-size:0.74rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;
+          transition:all .15s;"
+          onmouseover="this.style.background='rgba(167,139,250,.18)'"
+          onmouseout="this.style.background='rgba(167,139,250,.08)'">
+          👥 Gerenciar Usuários
+        </button>
+        <button onclick="closeCadastros()" style="background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;">✕</button>
+      </div>
     </div>
 
     <!-- Tabs -->
