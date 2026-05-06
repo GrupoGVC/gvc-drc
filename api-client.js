@@ -78,6 +78,9 @@ const GvcDRC = {
   async contadores() {
     return await _req('contadores', 'GET');
   },
+  async nextNumero() {
+    return await _req('next_numero', 'GET');
+  },
 };
 
 // ── Cadastros ────────────────────────────────────────

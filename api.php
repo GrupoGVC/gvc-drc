@@ -217,4 +217,16 @@ elseif($action==='contadores' && $method==='GET'){
     $row=db()->query("SELECT SUM(status='aguardando_execucao') AS aguardando,SUM(status='validacao_custos') AS validacao,SUM(status='concluido') AS concluido FROM drcs")->fetch();
     ok($row);
 }
+elseif($action==='next_numero' && $method==='GET'){
+    require_auth();
+    $ano = date('Y');
+    // Upsert e retorna próximo número de forma atômica
+    db()->prepare("INSERT INTO drc_sequence (ano, ultimo) VALUES (?, 1) ON DUPLICATE KEY UPDATE ultimo = ultimo + 1")->execute([$ano]);
+    $row = db()->prepare("SELECT ultimo FROM drc_sequence WHERE ano = ?")->execute([$ano]) ? db()->query("SELECT ultimo FROM drc_sequence WHERE ano = $ano")->fetch() : null;
+    // Use LAST_INSERT_ID trick for atomicity
+    db()->prepare("UPDATE drc_sequence SET ultimo = LAST_INSERT_ID(ultimo) WHERE ano = ?")->execute([$ano]);
+    $seq = db()->query("SELECT LAST_INSERT_ID() as n")->fetch();
+    $num = str_pad($seq['n'], 4, '0', STR_PAD_LEFT);
+    ok(['numero' => "DRC-{$ano}-{$num}", 'sequencia' => (int)$seq['n']]);
+}
 else { err('Ação desconhecida: '.htmlspecialchars($action),404); }

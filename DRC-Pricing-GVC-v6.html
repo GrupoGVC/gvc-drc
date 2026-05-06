@@ -1088,7 +1088,9 @@ async function load() {
       unidadeAtendimento: r.unidade, status: r.status,
       statusHistorico: [], coletas: [], destinacoes: [], locacoes: [], opEspeciais: [],
     }));
-    drcCounter = drcs.length;
+    // drcCounter is a fallback — real numbering uses drc_sequence table
+    const nums = drcs.map(d => parseInt((d.numero||'').split('-').pop())||0);
+    drcCounter = nums.length ? Math.max(...nums) : 0;
   } catch(e) { console.error('load error:', e); drcs = []; drcCounter = 0; }
   try {
     const c = await GvcCadastros.get();
@@ -1117,12 +1119,10 @@ async function saveCadastros() {
 // ═══════════════════════════════════════════════════════════
 // DRC MODEL
 // ═══════════════════════════════════════════════════════════
-function createDRC() {
-  drcCounter++;
-  const num = String(drcCounter).padStart(4, '0');
+function createDRC(numero) {
   return {
-    id: 'drc-' + Date.now(),
-    numero: `DRC-${new Date().getFullYear()}-${num}`,
+    id: 'drc-' + Date.now() + '-' + Math.random().toString(36).slice(2,7),
+    numero: numero || `DRC-${new Date().getFullYear()}-XXXX`,
     status: 'rascunho',
     statusHistorico: [{ status: 'rascunho', data: new Date().toISOString(), autor: '', justificativa: '' }],
     createdAt: new Date().toISOString(),
@@ -2633,8 +2633,19 @@ function removeOp(id) {
 // ═══════════════════════════════════════════════════════════
 // CRUD
 // ═══════════════════════════════════════════════════════════
-function newDRC() {
-  const drc = createDRC();
+async function newDRC() {
+  let numero;
+  try {
+    const res = await GvcDRC.nextNumero();
+    numero = res.numero;
+  } catch(e) {
+    // Fallback se API falhar
+    const ano = new Date().getFullYear();
+    drcCounter++;
+    numero = `DRC-${ano}-${String(drcCounter).padStart(4,'0')}`;
+  }
+  const drc = createDRC(numero);
+  ;
   drcs.push(drc);
   if(currentDRC) GvcDRC.save(currentDRC).catch(()=>{});
   selectDRC(drc.id);
