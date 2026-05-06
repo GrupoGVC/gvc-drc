@@ -2167,10 +2167,10 @@ function calcColeta(c) {
   const litros = media > 0 ? km / media : 0;
   const diesel = litros * (Number(c.dieselPorLitro) || 6.2) * numViagens;
   const pedagio = (Number(c.pedagio) || 0) * numViagens;
-  const ajud = (Number(c.ajudante) || 0) * (Number(c.manobraAjudante) || 122.98);
-  const mot = (Number(c.motorista) || 0.5) * (Number(c.manobraMot) || 203.93);
+  const ajud = (Number(c.ajudante) || 0) * (Number(c.manobraAjudante) || 0);
+  const mot = (Number(c.motorista) || 0) * (Number(c.manobraMot) || 0);
   const pernoite = (Number(c.pernoite) || 0) * 160;
-  const depr = (DEPR_VEICULO[c.veiculo] || 376.92) * numViagens;
+  const depr = (DEPR_VEICULO[c.veiculo] || 0) * numViagens;
   const seguro = (SEGURO_VEICULO[c.veiculo] || 0) * numViagens;
   const limpeza = (Number(c.limpezaSAO) || 0) * 250;
   const cvr = Number(c.viagemCVR) || 0;
@@ -2868,8 +2868,8 @@ function renderColeta(c, i) {
       </div>
       <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Mão de Obra (diárias)</div>
       <div class="form-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px;">
-        <div class="field"><label>Ajudante (diárias)</label><input type="number" value="${c.ajudante||0}" oninput="updateColeta('${c.id}','ajudante',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-ajud-${c.id}">${fmt((c.ajudante||0)*(c.manobraAjudante||122.98))}</span></div>
-        <div class="field"><label>Motorista (diárias)</label><input type="number" value="${c.motorista||0.5}" oninput="updateColeta('${c.id}','motorista',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-mot-${c.id}">${fmt((c.motorista||0.5)*(c.manobraMot||203.93))}</span></div>
+        <div class="field"><label>Ajudante (diárias)</label><input type="number" value="${c.ajudante||0}" oninput="updateColeta('${c.id}','ajudante',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-ajud-${c.id}">${fmt((c.ajudante||0)*(c.manobraAjudante||0))}</span></div>
+        <div class="field"><label>Motorista (diárias)</label><input type="number" value="${c.motorista||0}" oninput="updateColeta('${c.id}','motorista',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-mot-${c.id}">${fmt((c.motorista||0)*(c.manobraMot||0))}</span></div>
         <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*160)}</span></div>
         <div class="field"><label>Limpeza SAO (vezes)</label><input type="number" value="${c.limpezaSAO||0}" oninput="updateColeta('${c.id}','limpezaSAO',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-limp-${c.id}">${fmt((c.limpezaSAO||0)*250)}</span></div>
       </div>
@@ -3457,8 +3457,8 @@ function updateColeta(id, field, value) {
     var el = document.getElementById(spanId);
     if (el) el.textContent = fmt(val);
   };
-  upd('val-ajud-'  + id, (Number(c.ajudante)||0)       * (Number(c.manobraAjudante)||122.98));
-  upd('val-mot-'   + id, (Number(c.motorista)||0)       * (Number(c.manobraMot)||203.93));
+  upd('val-ajud-'  + id, (Number(c.ajudante)||0)       * (Number(c.manobraAjudante)||0));
+  upd('val-mot-'   + id, (Number(c.motorista)||0)       * (Number(c.manobraMot)||0));
   upd('val-pern-'  + id, (Number(c.pernoite)||0)        * 160);
   upd('val-limp-'  + id, (Number(c.limpezaSAO)||0)      * 250);
   // Update coleta result block
