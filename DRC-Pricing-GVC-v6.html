@@ -717,6 +717,11 @@ input.manual-input.manual-filled {
 }
 .ms-select-all:hover { background: var(--surface2); }
 .ms-select-all input[type=checkbox] { accent-color: var(--retec); width: 13px; height: 13px; cursor: pointer; }
+/* ── Cadastros tabs grid hover ── */
+#cadastros-overlay button[id^="tab-"]:hover {
+  background: var(--retec-dim);
+  color: var(--retec);
+}
 </style>
 </head>
 <body>
@@ -831,36 +836,54 @@ input.manual-input.manual-filled {
     </div>
 
     <!-- Tabs -->
-    <div style="display:flex; border-bottom:1px solid var(--border); flex-shrink:0;">
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid var(--border); flex-shrink:0;">
       <button id="tab-empresas" onclick="showTab('empresas')" style="
-        flex:1; padding:12px; background:none; border:none; border-bottom:2px solid var(--retec);
-        color:var(--retec); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer;">
-        🏢 Empresas
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid var(--retec);
+        color:var(--retec); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">🏢</span>Empresas
       </button>
       <button id="tab-unidades" onclick="showTab('unidades')" style="
-        flex:1; padding:12px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer;">
-        🏭 Unidades
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">🏭</span>Unidades
       </button>
       <button id="tab-consultores" onclick="showTab('consultores')" style="
-        flex:1; padding:12px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer;">
-        👤 Consultores
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">👤</span>Consultores
       </button>
       <button id="tab-categorias" onclick="showTab('categorias')" style="
-        flex:1; padding:12px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer;">
-        📁 Categorias
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">📁</span>Categorias
       </button>
       <button id="tab-justificativas" onclick="showTab('justificativas')" style="
-        flex:1; padding:12px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer;">
-        💬 Justificativas
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent; border-top:1px solid var(--border);
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">💬</span>Justificativas
       </button>
       <button id="tab-usuarios" onclick="showTab('usuarios')" style="
-        flex:1; padding:12px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.82rem; font-weight:600; cursor:pointer;">
-        👥 Usuários
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent; border-top:1px solid var(--border);
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">👥</span>Usuários
+      </button>
+      <button id="tab-veiculos" onclick="showTab('veiculos')" style="
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent; border-top:1px solid var(--border);
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">🚛</span>Veículos
+      </button>
+      <button id="tab-receptores" onclick="showTab('receptores')" style="
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent; border-top:1px solid var(--border);
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">🤝</span>Receptores
       </button>
     </div>
 
@@ -1032,7 +1055,1039 @@ let cadastros = {
   usuarios: [],
 };
 
-const VEICULOS = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Terceirizado', 'Especial', 'Romeu e Julieta'];
+const VEICULOS = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caçamba 12 ton', 'Muck 15 ton', 'Retroescavadeira', 'Terceirizado', 'Especial'];
+function getReceptoresData() {
+  if (!cadastros.receptores) cadastros.receptores = JSON.parse(JSON.stringify(RECEPTORES_DEFAULT));
+  return cadastros.receptores;
+}
+
+function renderReceptoresPanel() {
+  const el = document.getElementById('cadastro-list');
+  const rd = getReceptoresData();
+  const parceiros = rd.parceiros;
+  const residuos  = rd.residuos;
+
+  const fmtBRL = v => v > 0 ? 'R$ ' + v.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.') : '<span style="color:var(--text-dim)">—</span>';
+
+  // Build scrollable table
+  let html = `
+  <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;">
+      Tabela de custos de destinação por parceiro — clique em um valor para editar
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="addReceptorParceiro()" style="padding:5px 12px;border-radius:6px;background:var(--retec-dim);border:1px dashed rgba(0,200,150,0.4);color:var(--retec);font-family:var(--font);font-size:0.72rem;font-weight:600;cursor:pointer;">＋ Parceiro</button>
+      <button onclick="addReceptorResiduo()" style="padding:5px 12px;border-radius:6px;background:rgba(59,158,255,0.08);border:1px dashed rgba(59,158,255,0.3);color:var(--blue);font-family:var(--font);font-size:0.72rem;font-weight:600;cursor:pointer;">＋ Resíduo</button>
+    </div>
+  </div>
+  <div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border);">
+    <table style="width:100%;border-collapse:collapse;font-size:0.75rem;min-width:700px;">
+      <thead>
+        <tr style="background:var(--surface2);">
+          <th style="padding:9px 12px;text-align:left;font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.08em;color:var(--retec);text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;left:0;background:var(--surface2);min-width:200px;">Destinação / Tratamento</th>
+          ${parceiros.map((p,pi) => `
+            <th style="padding:9px 8px;text-align:center;font-family:var(--font-mono);font-size:0.55rem;letter-spacing:0.06em;color:var(--blue);text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;min-width:100px;">
+              <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+                <span contenteditable="true" onblur="renameReceptorParceiro(${pi},this.textContent.trim())" style="outline:none;cursor:text;" title="Clique para renomear">${p}</span>
+                <button onclick="removeReceptorParceiro(${pi})" title="Remover parceiro" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.65rem;padding:0 2px;line-height:1;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-dim)'">✕</button>
+              </div>
+            </th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+        ${residuos.map((res, ri) => `
+          <tr style="transition:background 0.1s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+            <td style="padding:8px 12px;border-bottom:1px solid var(--border);position:sticky;left:0;background:var(--surface);min-width:200px;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span contenteditable="true" onblur="renameReceptorResiduo(${ri},this.textContent.trim())" style="flex:1;outline:none;cursor:text;color:var(--text);font-size:0.78rem;" title="Clique para renomear">${res}</span>
+                <button onclick="removeReceptorResiduo(${ri})" title="Remover resíduo" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.65rem;padding:0 2px;line-height:1;flex-shrink:0;transition:color 0.15s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-dim)'">✕</button>
+              </div>
+            </td>
+            ${parceiros.map((p,pi) => {
+              const val = (rd.precos[res] && rd.precos[res][p]) ? rd.precos[res][p] : 0;
+              return `<td style="padding:6px 8px;border-bottom:1px solid var(--border);text-align:center;" onclick="editReceptorCell(${ri},${pi})" title="Clique para editar">
+                <span id="rc-${ri}-${pi}" style="font-family:var(--font-mono);font-size:0.72rem;cursor:pointer;display:inline-block;padding:3px 6px;border-radius:4px;transition:background 0.15s;" onmouseover="this.style.background='var(--retec-dim)'" onmouseout="this.style.background=''">${fmtBRL(val)}</span>
+              </td>`;
+            }).join('')}
+          </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+function editReceptorCell(ri, pi) {
+  const rd = getReceptoresData();
+  const res = rd.residuos[ri];
+  const par = rd.parceiros[pi];
+  const current = (rd.precos[res] && rd.precos[res][par]) ? rd.precos[res][par] : 0;
+  const cell = document.getElementById('rc-' + ri + '-' + pi);
+  if (!cell) return;
+  cell.innerHTML = `<input type="number" value="${current}" min="0" step="0.01"
+    style="width:88px;background:var(--surface);border:1px solid var(--retec);border-radius:4px;
+           color:var(--text);font-family:var(--font-mono);font-size:0.72rem;padding:3px 6px;outline:none;text-align:right;"
+    onblur="saveReceptorCell(${ri},${pi},this.value)"
+    onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){this.value='${current}';this.blur();}"
+    onfocus="this.select()">`;
+  cell.querySelector('input').focus();
+}
+
+function saveReceptorCell(ri, pi, val) {
+  const rd = getReceptoresData();
+  const res = rd.residuos[ri];
+  const par = rd.parceiros[pi];
+  if (!rd.precos[res]) rd.precos[res] = {};
+  rd.precos[res][par] = parseFloat(val) || 0;
+  saveCadastros();
+  renderReceptoresPanel();
+}
+
+function addReceptorParceiro() {
+  const nome = prompt('Nome do novo parceiro:');
+  if (!nome || !nome.trim()) return;
+  const rd = getReceptoresData();
+  if (rd.parceiros.includes(nome.trim())) { toast('⚠️ Parceiro já existe', 'var(--orange)'); return; }
+  rd.parceiros.push(nome.trim());
+  rd.residuos.forEach(res => { if (!rd.precos[res]) rd.precos[res] = {}; rd.precos[res][nome.trim()] = 0; });
+  saveCadastros();
+  renderReceptoresPanel();
+  toast('✅ Parceiro adicionado', 'var(--retec)');
+}
+
+function addReceptorResiduo() {
+  const nome = prompt('Nome do novo resíduo/destinação:');
+  if (!nome || !nome.trim()) return;
+  const rd = getReceptoresData();
+  if (rd.residuos.includes(nome.trim())) { toast('⚠️ Resíduo já existe', 'var(--orange)'); return; }
+  rd.residuos.push(nome.trim());
+  rd.precos[nome.trim()] = {};
+  rd.parceiros.forEach(p => { rd.precos[nome.trim()][p] = 0; });
+  saveCadastros();
+  renderReceptoresPanel();
+  toast('✅ Resíduo adicionado', 'var(--blue)');
+}
+
+function renameReceptorParceiro(pi, newName) {
+  if (!newName) return;
+  const rd = getReceptoresData();
+  const old = rd.parceiros[pi];
+  if (old === newName) return;
+  rd.parceiros[pi] = newName;
+  rd.residuos.forEach(res => {
+    if (rd.precos[res]) {
+      rd.precos[res][newName] = rd.precos[res][old] || 0;
+      delete rd.precos[res][old];
+    }
+  });
+  saveCadastros();
+  renderReceptoresPanel();
+}
+
+function renameReceptorResiduo(ri, newName) {
+  if (!newName) return;
+  const rd = getReceptoresData();
+  const old = rd.residuos[ri];
+  if (old === newName) return;
+  rd.residuos[ri] = newName;
+  rd.precos[newName] = rd.precos[old] || {};
+  delete rd.precos[old];
+  saveCadastros();
+  renderReceptoresPanel();
+}
+
+function removeReceptorParceiro(pi) {
+  const rd = getReceptoresData();
+  const par = rd.parceiros[pi];
+  if (!confirm(`Remover parceiro "${par}"? Os custos associados serão perdidos.`)) return;
+  rd.parceiros.splice(pi, 1);
+  rd.residuos.forEach(res => { if (rd.precos[res]) delete rd.precos[res][par]; });
+  saveCadastros();
+  renderReceptoresPanel();
+  toast('🗑 Parceiro removido', 'var(--red)');
+}
+
+function removeReceptorResiduo(ri) {
+  const rd = getReceptoresData();
+  const res = rd.residuos[ri];
+  if (!confirm(`Remover resíduo "${res}"?`)) return;
+  rd.residuos.splice(ri, 1);
+  delete rd.precos[res];
+  saveCadastros();
+  renderReceptoresPanel();
+  toast('🗑 Resíduo removido', 'var(--red)');
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATUS SYSTEM
+// ═══════════════════════════════════════════════════════════
+const STATUS_META = {
+  rascunho:   { label: 'Rascunho',    icon: '📝', color: '#8898aa', neg: false, desc: 'DRC em elaboração, ainda não enviado' },
+  enviado:    { label: 'Enviado',     icon: '📤', color: '#3b9eff', neg: false, desc: 'Enviado ao consultor interno para análise' },
+  em_analise: { label: 'Em Análise',  icon: '🔍', color: '#f5a623', neg: false, desc: 'Consultor está avaliando a proposta' },
+  aprovado:   { label: 'Aprovado',    icon: '✅', color: '#00c896', neg: false, desc: 'Proposta aprovada pelo consultor' },
+  reprovado:  { label: 'Reprovado',   icon: '❌', color: '#e84393', neg: true,  desc: 'Proposta reprovada — justificativa obrigatória' },
+  cancelado:  { label: 'Cancelado',   icon: '🚫', color: '#e06060', neg: true,  desc: 'DRC cancelado — justificativa obrigatória' },
+};
+
+let pendingStatus = null;
+let pendingJust   = '';
+
+function renderTimeline(drc) {
+  const hist = (drc.statusHistorico || []).slice().reverse();
+  if (!hist.length) return '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:16px 0;">Nenhum registro ainda.</div>';
+  return hist.map((h, i) => {
+    const meta = STATUS_META[h.status] || { label: h.status, icon: '●', color: 'var(--text-muted)' };
+    const d = h.data ? new Date(h.data) : null;
+    const dateStr = d ? d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : '—';
+    const isFirst = i === hist.length - 1;
+    return `
+      <div class="tl-item">
+        <div class="tl-line">
+          <div class="tl-dot" style="border-color:${meta.color};background:${isFirst ? 'transparent' : meta.color};"></div>
+          <div class="tl-vert"></div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-header">
+            <span class="tl-status" style="color:${meta.color};">${meta.icon} ${meta.label}</span>
+            <span class="tl-date">${dateStr}</span>
+            ${h.autor ? `<span class="tl-author">· ${h.autor}</span>` : ''}
+          </div>
+          ${h.justificativa ? `<div class="tl-just">💬 ${h.justificativa}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openStatusModal() {
+  if (!currentDRC) return;
+  pendingStatus = currentDRC.status;
+  pendingJust   = '';
+  const overlay = document.getElementById('status-modal-overlay');
+  document.getElementById('status-modal-num').textContent = currentDRC.numero + ' · ' + (currentDRC.cliente || 'sem cliente');
+  document.getElementById('status-autor').value = currentDRC.consultor || '';
+  const _ta = document.getElementById('just-textarea');
+  if (_ta) { _ta.value = ''; _ta.style.display = 'none'; }
+  renderStatusOpts();
+  renderJustPresets();
+  renderAutorSelect();
+  overlay.classList.add('open');
+}
+
+function closeStatusModal() {
+  document.getElementById('status-modal-overlay').classList.remove('open');
+  pendingStatus = null;
+  pendingJust   = '';
+}
+
+function renderStatusOpts() {
+  const container = document.getElementById('status-opts-container');
+  container.innerHTML = Object.entries(STATUS_META).map(([key, meta]) => {
+    const isCurrent  = key === currentDRC.status;
+    const isSelected = key === pendingStatus;
+    return `
+      <div class="status-opt ${isSelected ? 'selected' : ''}" onclick="selectStatus('${key}')" id="sopt-${key}"
+           style="${isCurrent ? 'opacity:0.5;pointer-events:none;' : ''}">
+        <div class="status-opt-dot" style="background:${meta.color};"></div>
+        <div class="status-opt-info">
+          <div class="status-opt-label">${meta.icon} ${meta.label}</div>
+          <div class="status-opt-desc">${meta.desc}</div>
+        </div>
+        ${isCurrent ? '<span style="font-size:0.65rem;color:var(--text-muted);font-style:italic;">atual</span>' : ''}
+        ${isSelected ? '<span style="color:var(--retec);font-size:0.9rem;">✓</span>' : ''}
+      </div>`;
+  }).join('');
+}
+
+function selectStatus(key) {
+  pendingStatus = key;
+  pendingJust   = '';
+  document.getElementById('just-textarea').value = '';
+  // Update visual
+  document.querySelectorAll('.status-opt').forEach(el => el.classList.remove('selected'));
+  const sel = document.getElementById('sopt-' + key);
+  if (sel) {
+    sel.classList.add('selected');
+    const check = sel.querySelector('span:last-child');
+    // Re-render cleanly
+    renderStatusOpts();
+  }
+  // Show/hide justificativa
+  const meta = STATUS_META[key];
+  const justSec = document.getElementById('just-section');
+  justSec.style.display = meta?.neg ? 'block' : 'none';
+  // Reset chip selection
+  document.querySelectorAll('.just-chip').forEach(c => c.classList.remove('active'));
+}
+
+function renderJustPresets() {
+  const sel = document.getElementById('just-select');
+  const ta  = document.getElementById('just-textarea');
+  const items = cadastros.justificativas || [];
+  sel.innerHTML = '<option value="">\u2014 Selecione uma justificativa \u2014</option>'
+    + items.map(j => '<option value="' + j.replace(/"/g, '&quot;') + '">' + j + '</option>').join('')
+    + '<option value="__outra__">\u270f Outra (digitar manualmente)...</option>';
+  sel.value = '';
+  if (ta) { ta.style.display = 'none'; ta.value = ''; }
+  pendingJust = '';
+}
+
+function renderAutorSelect() {
+  const sel = document.getElementById('status-autor');
+  if (!sel) return;
+  const users = cadastros.usuarios || [];
+  sel.innerHTML = '<option value="">— Selecione o usuário —</option>'
+    + users.map(u => '<option value="' + u.replace(/"/g, '&quot;') + '">' + u + '</option>').join('');
+  sel.value = '';
+}
+
+function selectJustOption(val) {
+  const ta = document.getElementById('just-textarea');
+  if (val === '__outra__') {
+    pendingJust = '';
+    if (ta) { ta.style.display = 'block'; ta.value = ''; ta.focus(); }
+  } else {
+    pendingJust = val;
+    if (ta) { ta.style.display = 'none'; ta.value = ''; }
+  }
+}
+
+function syncJustText(val) {
+  pendingJust = val;
+}
+
+
+
+function confirmStatusChange() {
+  if (!pendingStatus || !currentDRC) return;
+  const meta = STATUS_META[pendingStatus];
+  if (meta?.neg && !pendingJust.trim()) {
+    const sel = document.getElementById('just-select');
+    const ta  = document.getElementById('just-textarea');
+    if (sel) { sel.style.borderColor = 'var(--red)'; setTimeout(()=>sel.style.borderColor='var(--border2)', 1200); }
+    if (ta && ta.style.display !== 'none') { ta.style.borderColor = 'var(--red)'; ta.focus(); }
+    else if (sel) sel.focus();
+    toast('⚠️ Informe a justificativa para continuar', '#e84393');
+    return;
+  }
+  const autor = document.getElementById('status-autor').value.trim();
+  if (!autor) {
+    const sel = document.getElementById('status-autor');
+    if (sel) { sel.style.borderColor = 'var(--red)'; setTimeout(()=>sel.style.borderColor='var(--border2)', 1200); sel.focus(); }
+    toast('⚠️ Selecione o usuário responsável', '#e84393');
+    return;
+  }
+  const entry = {
+    status: pendingStatus,
+    data: new Date().toISOString(),
+    autor,
+    justificativa: meta?.neg ? pendingJust.trim() : '',
+  };
+  if (!currentDRC.statusHistorico) currentDRC.statusHistorico = [];
+  currentDRC.statusHistorico.push(entry);
+  currentDRC.status = pendingStatus;
+  // Auto-save
+  const idx = drcs.findIndex(d => d.id === currentDRC.id);
+  if (idx >= 0) drcs[idx] = currentDRC;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ drcs, counter: drcCounter }));
+  closeStatusModal();
+  renderForm();
+  renderList();
+  toast(`${meta.icon} Status atualizado: ${meta.label}`, meta.color);
+}
+
+
+// ── THEME TOGGLE ──────────────────────────────────────────
+function toggleMobileSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const btn = document.getElementById('mob-sidebar-toggle');
+  if (!sb) return;
+  const open = sb.classList.toggle('mobile-open');
+  btn.textContent = open ? '✕ Fechar' : '☰ DRCs';
+}
+
+function closeMobileSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const btn = document.getElementById('mob-sidebar-toggle');
+  if (!sb) return;
+  sb.classList.remove('mobile-open');
+  if (btn) btn.textContent = '☰ DRCs';
+}
+
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const newTheme = isLight ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  document.getElementById('theme-toggle').textContent = newTheme === 'light' ? '🌙' : '☀️';
+  localStorage.setItem('gvc_theme', newTheme);
+}
+// Init theme
+(function() {
+  const saved = localStorage.getItem('gvc_theme') || 'dark';
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('theme-toggle');
+      if (btn) btn.textContent = '☀️';
+    });
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════
+// TABELA MUN/UF → CLUSTER / UNIDADE DE ATENDIMENTO
+// ═══════════════════════════════════════════════════════════
+const MUN_UF_TABLE = [
+  {mun:"Abaíra",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Abaré",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Abreu e Lima, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Abreu e Lima, Terezina e Fortaleza",cluster:"CEARA",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Acajutiba",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Adustina",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Afrânio, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Água Fria",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Águas Clara",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Aiquara",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"ALAGOAS",cluster:"ALAGOAS",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Alagoinhas",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Alcobaça",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Almadina",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Amargosa",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Amélia Rodrigues",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"América Dourada",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Anagé",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Andaraí",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Andorinha",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Angical",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Anguera",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Antas",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Antônio Almeida, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Antônio Cardoso",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Antônio Gonçalves",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Aporá",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Apuarema",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"ARACAJU, SE",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Araçás",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Aracatu",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Araci",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Aramari",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Arataca",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Aratuípe",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Arcoverde, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"ARINOS  MG",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Aurelino Leal",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Baianópolis",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Baixa Grande",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Banzaê",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Barra",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Barra da Estiva",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Barra do Choça",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Barra do Mendes",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Barra do Rocha",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Barreiras",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Barro Alto",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Barro Preto",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Barrocas",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Belém do São Francisco, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Belmonte",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Belo Campo",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Biritinga",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Boa Nova",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Boa Vista do Tupim",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Bom Jesus da Lapa",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Bom Jesus da Serra",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Bonfim do Piauí",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Boninal",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Bonito",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Boquira",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Botuporã",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Brejões",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Brejolândia",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"BREJOLANDIA, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Brotas de Macaúbas",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Brumado",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Buerarema",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Buritirama",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Caatiba",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Cabaceiras do Paraguaçu",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cabo de Santo Agostinho, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Cabrobó, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Cachoeira",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Caculé",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Caém",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Caetanos",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Caetité",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Cafarnaum",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cairu",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Caldeirão Grande",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Camacan",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Camaçari",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Camamu",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cambira – Paraná",cluster:"PARANA",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Campo Alegre de Lourdes",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Campo Formoso",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Canápolis",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Canarana",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Canavieiras",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Candeal",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Candeias",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Candiba",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Cândido Sales",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Cansanção",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Canudos",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Capela do Alto Alegre",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Capim Grosso",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"CAPITÃO GERVÁSIO OLIVEIRA  PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"CAPITÃO GERVÁSIO OLIVEIRA,  PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Caraíbas",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Caravelas",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cardeal da Silva",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Carinhanha",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Casa Nova",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Castro Alves",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Catolândia",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Catu",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Caturama",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"CEARA / RIO   GRANDE SUL / BAHIA",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Central",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Chapa Gaucha",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Chorrochó",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Cícero Dantas",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cipó",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Coaraci",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cocos",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Conceição da Feira",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Conceição do Almeida",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"CONCEIÇÃO DO CANINDÉ, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Conceição do Coité",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Conceição do Jacuípe",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Conde",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Condeúba",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Contendas do Sincorá",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Coração de Maria",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cordeiros",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Coribe",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Coronel João Sá",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Coronel José Dias, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Correntina",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Cotegipe",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Cravolândia",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Crisópolis",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Cristino Castro, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Cristópolis",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Cruz das Almas",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Curaçá",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Dário Meira",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Dias d'Ávila",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Dom Basílio",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Dom Inocêncio, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Dom Macedo Costa",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Dormentes, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Elísio Medrado",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Encruzilhada",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Entre Rios",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Érico Cardoso",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"ESPÍRITO SANTO",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Esplanada",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Euclides da Cunha",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Eunápolis",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Exu, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Fátima",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Feira da Mata",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Feira de Santana",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Filadélfia",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Firmino Alves",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Floresta Azul",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Formosa do Rio Preto",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Gandu, BA",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Gavião",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Gentio do Ouro",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Glória",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Gongogi",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Governador Mangabeira",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Guajeru",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Guanambi",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Guaratinga",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Heliópolis",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Iaçu",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibiassucê",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ibicaraí",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibicoara",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibicuí",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibipeba",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibipitanga",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ibiquera",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibirapitanga",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibirapuã",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibirataia",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibitiara",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ibititá",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ibotirama",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ichu",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Igaporã",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Igrapiúna",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Iguaí",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Iha de Itaparica",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ilhéus",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ingazeira, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Inhambupe",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ipecaetá",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ipiaú",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ipirá",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ipupiara",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Irajuba",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Iramaia",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Iraquara",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Irará",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Irecê",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itabela",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itaberaba",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itabuna",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itacaré",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itaeté",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itagi",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itagibá",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itagimirim",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itaguaçu da Bahia",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itaju do Colônia",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itajuípe",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itamaraju",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itamari",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itambé",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Itanagra",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itanhém",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itaparica",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itapé",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itapebi",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itapetim, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Itapetinga",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Itapicuru",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itapitanga",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itaquara",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itarantim",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itatim",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itiruçu",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Itiúba",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Itororó",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ituaçu",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ituberá",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Iuiu",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Jaborandi",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Jacaraci",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Jacobina",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jaguaquara",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jaguarari",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jaguaripe",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"JAICÓS0 PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Jandaíra",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jequié",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jeremoabo",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jiquiriçá",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jitaúna",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"João Costa PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"João Dourado",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Juazeiro",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Jucuruçu",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Júlio Borges, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Jussara",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jussari",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Jussiape",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Lafaiete Coutinho",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lagoa do Barro do Piauí, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Lagoa do Barro, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Lagoa Grande, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Lagoa Real",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Lagoa, PB",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Laje",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lajedão",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lajedinho",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lajedo do Tabocal",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lamarão",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lapão",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lauro de Freitas",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Lençóis",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Licínio de Almeida",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Livramento de Nossa Senhora",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Luís Eduardo Magalhães",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Macajuba",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Macarani",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Macaúbas",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Macururé",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Madre de Deus",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Maetinga",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Maiquinique",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mairi",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Malhada",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Malhada de Pedras",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Manoel Vitorino",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mansidão",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Maracás",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Maragogipe",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Maraú, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Marcionílio Souza",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mascote",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mata de São João",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Matina",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Medeiros Neto",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Miguel Calmon",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Milagres",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mirangaba",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mirante",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Monte Santo",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Morpará",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Morro do Chapéu",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mortugaba, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Mucugê, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mucuri, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mulungu do Morro, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mundo Novo, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Muniz Ferreira, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Muquém do São Francisco, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Muritiba, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Mutuípe, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"N. SRA. SOCORRO , SE",cluster:"SERGIPE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nazaré, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nazária, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Nilo Peçanha, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nordestina, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nordestina, SE",cluster:"SERGIPE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Canaã, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Fátima, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Ibiá, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Itarana, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Redenção, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Soure, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Nova Viçosa, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Novo Horizonte",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Novo Triunfo, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Olindina, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Oliveira dos Brejinhos, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Orocó, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Ouriçangas, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ourolândia",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Palmas de Monte Alto",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Palmeira, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Palmeiras, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Paramirim",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Paratinga",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Paripiranga, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Parrelhas,  RN",cluster:"R G NORTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Pau Brasil, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Paulo Afonso",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Pé de Serra, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Pedrão, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Pedro Alexandre, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Pernambuco",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Petrolândia, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Petrolina, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Piatã",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Piauí",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Pilão Arcado, BA, Brasil",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Pindaí",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Pindobaçu, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Pintadas",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Piraí do Norte, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Piripá, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Piritiba, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"PITINGA",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Planaltino, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Planalto, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Poções, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Pojuca",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ponto Novo, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Porto Seguro, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Potiraguá, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Prado, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Presidente Dutra, Ba, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Presidente Jânio Quadros, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Presidente Tancredo Neves, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Queimada Nova, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Queimadas, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Quijingue, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Quixabeira, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Rafael Jambeiro, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Recife",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Remanso, BA, Brasil",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Retirolândia, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Riachão das Neves",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Riachão do Jacuípe, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Riacho de Santana, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ribeira do Amparo, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ribeira do Pombal, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ribeirão do Largo, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Ribeiro Gonçalves, PI",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Rio de Contas, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Rio do Antônio, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Rio do Pires, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Rio Real, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Rodelas, BA, Brasil",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Ruy Barbosa, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Salgueiro, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Salinas da Margarida, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Salvador",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa Bárbara, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa Brígida, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa Cruz Cabrália, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa Cruz da Vitória, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa filomena, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Santa Inês, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa Luzia, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santa Maria da Boa Vista, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Santa Maria da Vitória, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Santa Rita de Cássia, BA, Brasil",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Santa Teresinha, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santaluz",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santana, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Santanópolis, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santo Amaro",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santo Antonio de Jesus",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santo Antônio de Jesus",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Santo Estêvão, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Desidério",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Sao Domingos, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Felipe, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Félix",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Félix do Coribe, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"São Francisco do Conde",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Gabriel, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Gonçalo do Gurguéia, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"São Gonçalo dos Campos",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São José da Vitória, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São José do Jacuípe, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Miguel das Matas, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"São Raimundo Nonato, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"São Sebastião do Passé, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Sapeaçu, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Sátiro Dias, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Saubara, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Saúde, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Seabra, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Sebastião Laranjeiras, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Sebastião Leal, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Senhor do Bonfim",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Sento Sé",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Serra do Ramalho, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Serra Dourada, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Serra Preta, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Serra Talhada, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Serrinha",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Serrolândia, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Simões Filho",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Simões, PI",cluster:"Norte",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Sítio do Mato, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Sítio do Quinto, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Sobradinho, BA, Brasil",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Souto Soares, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Tabocas do Brejo Velho, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Tanhaçu, BA, Brasil",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Tanque Novo",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Tanquinho, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Taperoá, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Tapiramutá, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Teixeira de Freitas, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Teodoro Sampaio, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Teofilândia, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Teolândia, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Teresina, PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Terra Nova, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Tocantins",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Tremedal",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Trindade, PE",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Tucano, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Uauá, BA, Brasil",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ubaíra, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ubaitaba, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Ubatã, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Uibaí, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Umburanas",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Una, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Urandi",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Uruçuca, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Urucui -PI",cluster:"NORTE",empresa:"Retec S.A.",unidade:"Juazeiro"},
+  {mun:"Utinga, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Valença",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Valente",cluster:"LESTE",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Várzea da Roça, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Várzea do Poço, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Várzea Nova, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Varzedo, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Vera Cruz, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Vereda, BA, Brasil",cluster:"SUL",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Vitória da Conquista",cluster:"SUDOESTE",empresa:"Retec Oeste",unidade:"Bom Jesus da Lapa"},
+  {mun:"Wagner, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Wanderley, BA, Brasil",cluster:"OESTE",empresa:"Retec Oeste",unidade:"Barreiras"},
+  {mun:"Wenceslau Guimarães, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+  {mun:"Xique-Xique, BA, Brasil",cluster:"CENTRO-RECÔN.",empresa:"Retec S.A.",unidade:"Simões Filhos"},
+];
+
+// ═══════════════════════════════════════════════════════════
+// MODAL — ABRIR DRC
+// ═══════════════════════════════════════════════════════════
+function onMunUFChange(val) {
+  if (!currentDRC) return;
+  currentDRC.munUF = val;
+  const row = MUN_UF_TABLE.find(r => r.mun === val);
+  if (row) {
+    currentDRC.cluster = row.cluster;
+    currentDRC.unidadeAtendimento = row.unidade;
+  } else {
+    currentDRC.cluster = '';
+    currentDRC.unidadeAtendimento = '';
+  }
+  autoSave();
+  // Re-render only the identification fields
+  const clusterSel = document.getElementById('field-cluster');
+  const unidadeSel = document.getElementById('field-unidadeAtendimento');
+  if (clusterSel) clusterSel.value = currentDRC.cluster || '';
+  if (unidadeSel) unidadeSel.value = currentDRC.unidadeAtendimento || '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// SEED: DRC EMAPE — importado da planilha 44_DCR_EMAPE_REVISÃO_V4
+// Executado apenas uma vez; não sobrescreve dados existentes.
+// ═══════════════════════════════════════════════════════════
+(function seedEMAPE() {
+  try {
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"drcs":[],"counter":0}');
+    const alreadySeeded = existing.drcs && existing.drcs.some(d => d._seed === 'emape_44_v4');
+    if (alreadySeeded) return;
+
+    const coleta1Id = 'col-seed-001';
+    const coleta2Id = 'col-seed-002';
+
+    const drcEMAPE = {
+      id: 'drc-seed-emape-44',
+      _seed: 'emape_44_v4',
+      numero: 'DRC-2025-0044',
+      status: 'rascunho',
+      statusHistorico: [{ status: 'rascunho', data: new Date().toISOString(), autor: 'Importação Excel', justificativa: '' }],
+      createdAt: new Date().toISOString(),
+      // Cabeçalho
+      empresa: 'Retec Oeste',
+      cliente: 'EMAPE',
+      lead: 'EMAPE - Barreiras',
+      consultor: '',
+      data: '2025-04-22',
+      munUF: 'Barreiras',
+      cluster: 'OESTE',
+      unidadeAtendimento: 'Barreiras',
+      categoriaServico: ['RECORRENTE', ''],
+      obs: 'REALIZAR COLETA UMA VEZ POR SEMANA – CONSIDERAR 4 BOMBONAS POR COLETA.\nDORA: Validar se o roteiro atende à demanda?',
+      obsFinais: 'Revisão 01 - 2024 / Data Revisão: 14/07/24. Proposta recorrente conforme planilha 44_DCR_EMAPE_REVISÃO_V4.',
+      leadFoto: '',
+
+      // ── 1º Ponto de Coleta ──────────────────────────────
+      coletas: [
+        {
+          id: coleta1Id,
+          numero: 1,
+          endereco: 'RODOVIA BR 242 20, ZONA RURAL DE BARREIRAS',
+          destino: 'Retec Oeste',
+          residuo: 'CLASSE I',
+          veiculo: 'Rolon Of',
+          distanciaTotal: 70,
+          mediaKm: 3.3,
+          qtdViagens: 20,           // 20 viagens/mês conforme "Total de Viagens: 20"
+          kmPercorrido: null,
+          pedagio: 0,
+          ajudante: 0.5,
+          motorista: 0.5,
+          pernoite: 0,
+          limpezaSAO: 0,
+          viagemCVR: 0,
+          vacuoSucao: 0,
+          retroescavadeira: 0,
+          kitBomba: 0,
+          precoBaseVenda: 0,
+          dieselPorLitro: 7.3,
+          manobraAjudante: 122.98,
+          manobraMot: 203.93,
+          manutencao: 83.33,
+          ipva: 36.11,
+          custoOperacao: 0,
+          custoDestinacao: 0,
+          tempoServicoH: 0,
+          tempoServicoMin: 0,
+          obsOperacao: 'Coleta semanal — 4 bombonas por coleta. Rota: BR-242, Zona Rural Barreiras → Retec Oeste.',
+          fotos: [],
+        },
+        // ── 2º Ponto de Coleta (CVR) ──────────────────────
+        {
+          id: coleta2Id,
+          numero: 2,
+          endereco: 'RETEC BARREIRAS - ÁREA INTERNA (CVR)',
+          destino: 'CVR OESTE LTDA',
+          residuo: 'CLASSE II (entulho/solo)',
+          veiculo: 'Baú 3/4',
+          distanciaTotal: 0,
+          mediaKm: 6,
+          qtdViagens: 10,           // 10 viagens/mês conforme "Total de Viagens: 10"
+          kmPercorrido: null,
+          pedagio: 0,
+          ajudante: 0,
+          motorista: 0,
+          pernoite: 0,
+          limpezaSAO: 0,
+          viagemCVR: 350,           // Viagem caçamba CVR = R$ 350
+          vacuoSucao: 0,
+          retroescavadeira: 0,
+          kitBomba: 0,
+          precoBaseVenda: 0,
+          dieselPorLitro: 6.6,
+          manobraAjudante: 122.98,
+          manobraMot: 203.93,
+          manutencao: 83.33,
+          ipva: 36.11,
+          custoOperacao: 0,
+          custoDestinacao: 0,
+          tempoServicoH: 0,
+          tempoServicoMin: 0,
+          obsOperacao: 'Viagem com caçamba CVR — R$ 350/viagem.',
+          fotos: [],
+        }
+      ],
+
+      // ── Destinação ──────────────────────────────────────
+      destinacoes: [
+        {
+          id: 'd-seed-001',
+          tipo: 'Aterro Industrial - CLASSE 2 (NR/ORGÂNICO/MADEIRA/VIDRO/REJEITOS)',
+          unidade: 'kg',
+          qtd: 25000,
+          coletadoKg: null,
+          custoUnit: 0.12,
+          pvUnit: 0.30,
+          receptor: 'CVR OESTE LTDA',
+        }
+      ],
+
+      // ── Locação ──────────────────────────────────────────
+      locacoes: [
+        {
+          id: 'l-seed-001',
+          descricao: 'Caixa 30m³ - Própria',
+          qtd: 2,
+          unidade: 'Mês',
+          custo: 1900,
+          venda: 3400,
+        }
+      ],
+
+      // ── Operações Especiais ──────────────────────────────
+      opEspeciais: [],
+    };
+
+    existing.drcs.unshift(drcEMAPE);
+    existing.counter = Math.max(existing.counter || 0, 44);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {
+    console.warn('[Seed EMAPE] Erro ao importar:', e);
+  }
+})();
+
+
 const DESTINOS = [
   'Autoclavagem - Bombona 200L', 'Autoclavagem - Bombona 50L',
   'Incineração - Papel', 'Incineração Classe I Sólido', 'Incineração Classe I Líquido',
@@ -1060,20 +2115,89 @@ const MARKUP = 2.35;
 
 // Custo de locação por diária
 const DEPR_VEICULO = {
-  'Baú 3/4': 346.15, 'Baú toco': 326.92, 'Poli': 692.31, 'Rolon Of': 1076.92,
-  'Poli/Rolon': 692.31, 'Fiorino': 153.85, 'HR': 269.23,
-  'Terceirizado': 1230.77, 'Especial': 300.00, 'Romeu e Julieta': 1100.00,
+  'Baú 3/4': 376.92,       // tabela: R$ 376,92
+  'Baú toco': 365.38,      // tabela: R$ 365,38
+  'Poli': 1076.92,         // tabela: R$ 1.076,92
+  'Rolon Of': 1192.31,     // tabela: R$ 1.192,31
+  'Poli/Rolon': 1076.92,
+  'Fiorino': 153.85,       // tabela: R$ 153,85
+  'HR': 307.69,            // tabela: R$ 307,69
+  'Romeu e Julieta': 1461.54, // tabela: R$ 1.461,54
+  'Sucção 12m³': 1900.00,  // tabela: R$ 1.900,00
+  'Caçamba 12 ton': 1050.00, // tabela: R$ 1.050,00
+  'Muck 15 ton': 1850.00,  // tabela: R$ 1.850,00
+  'Retroescavadeira': 1400.00, // tabela: R$ 1.400,00
+  'Terceirizado': 1230.77, 'Especial': 300.00,
 };
 // Custo de seguro por diária
 const SEGURO_VEICULO = {
   'Baú 3/4': 14.42, 'Baú toco': 14.42, 'Poli': 12.18, 'Rolon Of': 21.79,
   'Poli/Rolon': 12.18, 'Fiorino': 8.01, 'HR': 11.54,
-  'Terceirizado': 0, 'Especial': 0, 'Romeu e Julieta': 20.83,
+  'Romeu e Julieta': 20.83,
+  'Sucção 12m³': 0, 'Caçamba 12 ton': 0, 'Muck 15 ton': 0, 'Retroescavadeira': 0,
+  'Terceirizado': 0, 'Especial': 0,
 };
 const CONSUMO_VEICULO = { // km/litro
   'Baú 3/4': 6, 'Baú toco': 3.5, 'Poli': 3.5, 'Rolon Of': 3.3, 'Poli/Rolon': 3.3,
   'Fiorino': 10, 'HR': 7, 'Terceirizado': 3.5, 'Especial': 3.5, 'Romeu e Julieta': 3,
+  'Sucção 12m³': 3.5, 'Caçamba 12 ton': 3.5, 'Muck 15 ton': 3.5, 'Retroescavadeira': 0,
 };
+
+const RECEPTORES_DEFAULT = {
+  parceiros: ['CTR Petrolina','CTR BA','CVR Alto Sertão','CVR Bom Jesus da Lapa','CVR Oeste','Essencis','Mr Soluções','Retec Simões Filho'],
+  residuos: [
+    'Alimento impróprio p/ consumo',
+    'Aterro Industrial - Classe 1 (Sólido)',
+    'Aterro Industrial - Classe 1 (Líquido)',
+    'Aterro Industrial - Classe 2 (Orgânico/Rejeitos/Nr)',
+    'Aterro Industrial - Classe 2 (RCC)',
+    'Aterro Industrial - Classe 2 A (Líquido)',
+    'Blendagem p/ Coprocessamento - Classe 1 Líquido',
+    'Blendagem p/ Coprocessamento - Classe 1 sólido',
+    'Cinzas',
+    'Descaracterização Eletrônicos',
+    'Destinação de Pilhas e Baterias',
+    'Espuma de polietileno',
+    'Lâmpadas fluorescentes UNIDADE',
+    'Reciclagem - Borrachas e Pneus',
+    'Recuperação Energética da Madeira',
+    'Trat autoclave - Bombona de 50Lt',
+    'Tratamento físico/químico - Efluente sanitário',
+    'Tratamento incineração classe I - Líquido',
+    'Tratamento incineração classe I - Sólido',
+    'Tratamento incineração papel',
+    'Tratamento Químico Líquido - ETE (Classe 1)',
+    'Resíduo Autoclavado',
+    'Telha de Amianto',
+  ],
+  // precos[residuo][parceiro] = custo unitário (R$/ton ou R$/unidade)
+  precos: {
+    'Alimento impróprio p/ consumo':                        {'CTR Petrolina':144.77,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':150.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Aterro Industrial - Classe 1 (Sólido)':                {'CTR Petrolina':762.82,'CTR BA':380.00,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':300.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Aterro Industrial - Classe 1 (Líquido)':               {'CTR Petrolina':0,'CTR BA':220.00,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':0,'Mr Soluções':120.00,'Retec Simões Filho':0},
+    'Aterro Industrial - Classe 2 (Orgânico/Rejeitos/Nr)':  {'CTR Petrolina':85.71,'CTR BA':200.00,'CVR Alto Sertão':122.00,'CVR Bom Jesus da Lapa':122.00,'CVR Oeste':122.00,'Essencis':150.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Aterro Industrial - Classe 2 (RCC)':                   {'CTR Petrolina':62.31,'CTR BA':70.00,'CVR Alto Sertão':61.00,'CVR Bom Jesus da Lapa':61.00,'CVR Oeste':61.00,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Aterro Industrial - Classe 2 A (Líquido)':             {'CTR Petrolina':0,'CTR BA':220.00,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':0,'Mr Soluções':120.00,'Retec Simões Filho':0},
+    'Blendagem p/ Coprocessamento - Classe 1 Líquido':      {'CTR Petrolina':0,'CTR BA':450.00,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':350.00,'Mr Soluções':350.00,'Retec Simões Filho':0},
+    'Blendagem p/ Coprocessamento - Classe 1 sólido':       {'CTR Petrolina':0,'CTR BA':450.00,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':350.00,'Mr Soluções':350.00,'Retec Simões Filho':0},
+    'Cinzas':                                               {'CTR Petrolina':182.09,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':200.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Descaracterização Eletrônicos':                        {'CTR Petrolina':0,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':150.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Destinação de Pilhas e Baterias':                      {'CTR Petrolina':0,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Espuma de polietileno':                                {'CTR Petrolina':314.25,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':450.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Lâmpadas fluorescentes UNIDADE':                      {'CTR Petrolina':4.17,'CTR BA':0,'CVR Alto Sertão':0.48,'CVR Bom Jesus da Lapa':0.48,'CVR Oeste':0.48,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':0.48},
+    'Reciclagem - Borrachas e Pneus':                       {'CTR Petrolina':101.17,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':300.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Recuperação Energética da Madeira':                    {'CTR Petrolina':85.71,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':150.00,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Trat autoclave - Bombona de 50Lt':                     {'CTR Petrolina':0,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Tratamento físico/químico - Efluente sanitário':       {'CTR Petrolina':0,'CTR BA':220.00,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Tratamento incineração classe I - Líquido':            {'CTR Petrolina':5.80,'CTR BA':0,'CVR Alto Sertão':2500.00,'CVR Bom Jesus da Lapa':2500.00,'CVR Oeste':2500.00,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':2500.00},
+    'Tratamento incineração classe I - Sólido':             {'CTR Petrolina':5.80,'CTR BA':0,'CVR Alto Sertão':2500.00,'CVR Bom Jesus da Lapa':2500.00,'CVR Oeste':2500.00,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':2500.00},
+    'Tratamento incineração papel':                         {'CTR Petrolina':3.80,'CTR BA':0,'CVR Alto Sertão':1900.00,'CVR Bom Jesus da Lapa':1900.00,'CVR Oeste':1900.00,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':1900.00},
+    'Tratamento Químico Líquido - ETE (Classe 1)':          {'CTR Petrolina':0,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':0},
+    'Resíduo Autoclavado':                                  {'CTR Petrolina':0,'CTR BA':115.00,'CVR Alto Sertão':1900.00,'CVR Bom Jesus da Lapa':1900.00,'CVR Oeste':1900.00,'Essencis':0,'Mr Soluções':0,'Retec Simões Filho':1900.00},
+    'Telha de Amianto':                                     {'CTR Petrolina':0,'CTR BA':0,'CVR Alto Sertão':0,'CVR Bom Jesus da Lapa':0,'CVR Oeste':0,'Essencis':420.00,'Mr Soluções':0,'Retec Simões Filho':0},
+  }
+};
+
 
 // ═══════════════════════════════════════════════════════════
 // STORAGE
@@ -1100,6 +2224,8 @@ async function load() {
       if (!cadastros.justificativas) cadastros.justificativas = [];
       if (!cadastros.empresasLogos)  cadastros.empresasLogos  = {};
       if (!cadastros.usuarios)       cadastros.usuarios       = [];
+      if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
+      if (!cadastros.receptores) cadastros.receptores = null;
     }
   } catch(e) { console.error('load cadastros error:', e); }
 }
@@ -1164,7 +2290,7 @@ function newDest() {
   return { id: 'd-' + Date.now() + Math.random(), tipo: '', unidade: 'kg', qtd: 0, coletadoKg: null, custoUnit: 0, pvUnit: 0, receptor: '' };
 }
 function newLoc() {
-  return { id: 'l-' + Date.now() + Math.random(), descricao: '', qtd: 1, unidade: 'Mês', custo: 0, venda: 0 };
+  return { id: 'l-' + Date.now() + Math.random(), descricao: '', qtd: 1, unidade: 'Mês', diarias: 1, custo: 0, venda: 0 };
 }
 function newOpEsp() {
   return { id: 'op-' + Date.now() + Math.random(), descricao: '', qtd: 1, unidade: 'Serviço', custo: 0, venda: 0, fornecedor: '' };
@@ -1184,8 +2310,8 @@ function calcColeta(c) {
   const ajud = (Number(c.ajudante) || 0) * (Number(c.manobraAjudante) || 122.98);
   const mot = (Number(c.motorista) || 0.5) * (Number(c.manobraMot) || 203.93);
   const pernoite = (Number(c.pernoite) || 0) * 160;
-  const depr = (DEPR_VEICULO[c.veiculo] || 346.15) * viagens * numViagens;
-  const seguro = (SEGURO_VEICULO[c.veiculo] || 0) * viagens * numViagens;
+  const depr = (DEPR_VEICULO[c.veiculo] || 376.92) * numViagens;
+  const seguro = (SEGURO_VEICULO[c.veiculo] || 0) * numViagens;
   const limpeza = (Number(c.limpezaSAO) || 0) * 250;
   const cvr = Number(c.viagemCVR) || 0;
   const vacuo = Number(c.vacuoSucao) || 0;
@@ -1689,7 +2815,7 @@ function renderForm() {
     '</div>' +
     '<div class="section-body">' +
       '<table class="items-table" style="width:100%">' +
-        '<thead><tr><th>Descrição</th><th>Qtde</th><th>Unidade</th><th>$ Custo Unit.</th><th>$ Venda Unit.</th><th>$ Receita</th><th></th></tr></thead>' +
+        '<thead><tr><th>Descrição</th><th>Qtde</th><th>Unidade</th><th>Diárias</th><th>$ Custo/Diária</th><th>$ Despesa</th><th>$ Venda Unit.</th><th>$ Receita</th><th></th></tr></thead>' +
         '<tbody id="loc-tbody">' + drc.locacoes.map((l,i) => renderLocRow(l,i)).join('') + '</tbody>' +
       '</table>' +
       '<button class="add-row-btn" onclick="addLoc()">＋ Adicionar Item de Locação</button>' +
@@ -1828,7 +2954,12 @@ function renderColeta(c, i) {
     <div class="ctab-pane active" id="cpane-dados-${c.id}">
       <div class="form-grid cols3" style="margin-bottom:12px;">
         <div class="field"><label>Endereço de Coleta</label><input value="${c.endereco||''}" oninput="updateColeta('${c.id}','endereco',this.value)" placeholder="Rua, número, bairro..."></div>
-        <div class="field"><label>Resíduo</label><input value="${c.residuo||''}" oninput="updateColeta('${c.id}','residuo',this.value)" placeholder="Tipo de resíduo"></div>
+        <div class="field"><label>Resíduo</label>
+          <select onchange="updateColeta('${c.id}','residuo',this.value)">
+            <option value="">Tipo de resíduo</option>
+            ${getReceptoresData().residuos.map(r => `<option value="${r}" ${c.residuo===r?'selected':''}>${r}</option>`).join('')}
+          </select>
+        </div>
         <div class="field"><label>Destino</label>
           <select onchange="updateColeta('${c.id}','destino',this.value)">
             <option value="">— Selecione o destino —</option>
@@ -1857,7 +2988,7 @@ function renderColeta(c, i) {
         </div>
         <div class="field"><label>Tipo de Veículo</label>
           <select onchange="updateColeta('${c.id}','veiculo',this.value)">
-            ${VEICULOS.map(v => `<option value="${v}" ${c.veiculo===v?'selected':''}>${v}</option>`).join('')}
+            ${(cadastros.veiculos && cadastros.veiculos.length ? cadastros.veiculos : VEICULOS).map(v => `<option value="${v}" ${c.veiculo===v?'selected':''}>${v}</option>`).join('')}
           </select>
         </div>
         <div class="field"><label>Distância Total (km)</label><input id="dados-dist-${c.id}" type="number" value="${c.distanciaTotal||0}" oninput="updateColeta('${c.id}','distanciaTotal',this.value);var m=document.getElementById('map-dist-${c.id}');if(m)m.value=this.value;" min="0"></div>
@@ -2011,38 +3142,44 @@ function renderColeta(c, i) {
 function renderDestRow(d, i) {
   const rec = (Number(d.pvUnit)||0) * (Number(d.qtd)||0);
   const desp = (Number(d.custoUnit)||0) * (Number(d.qtd)||0);
+  const rd = getReceptoresData();
+  const parceiros = rd.parceiros || [];
+  const residuos = rd.residuos || [];
   return `<tr id="dest-${d.id}">
-    <td><select style="min-width:200px;" onchange="updateDest('${d.id}','tipo',this.value)">
+    <td><select style="min-width:200px;" onchange="updateDestTipo('${d.id}',this.value)">
       <option value="">Selecione...</option>
-      ${DESTINOS.map(t => `<option value="${t}" ${d.tipo===t?'selected':''}>${t}</option>`).join('')}
+      ${residuos.map(t => `<option value="${t}" ${d.tipo===t?'selected':''}>${t}</option>`).join('')}
     </select></td>
     <td><input value="${d.unidade||'kg'}" oninput="updateDest('${d.id}','unidade',this.value)" style="width:60px;"></td>
     <td><input type="number" value="${d.qtd||0}" oninput="updateDest('${d.id}','qtd',this.value)" style="width:80px;" min="0"></td>
     <td><input type="number" value="${d.coletadoKg||''}" oninput="updateDest('${d.id}','coletadoKg',this.value);this.classList.toggle('manual-filled',!!this.value);" class="manual-input${d.coletadoKg ? ' manual-filled' : ''}" style="width:90px;" min="0" placeholder="—"></td>
-    <td><input type="number" value="${d.custoUnit||0}" oninput="updateDestCusto('${d.id}',this.value)" style="width:100px;" step="0.01" min="0"></td>
+    <td><input type="number" value="${d.custoUnit||0}" oninput="updateDestCusto('${d.id}',this.value)" style="width:100px;" step="0.01" min="0" id="dest-custo-${d.id}"></td>
     <td><input type="number" id="dest-pv-${d.id}" value="${d.pvUnit||0}" oninput="updateDest('${d.id}','pvUnit',this.value)" style="width:100px;" step="0.01" min="0"></td>
     <td class="total-cell" id="dest-rec-${d.id}">${fmt(rec)}</td>
     <td class="total-cell" style="color:var(--orange);" id="dest-desp-${d.id}">${fmt(desp)}</td>
     <td>
-      <input list="receptores-list" value="${d.receptor||''}" oninput="updateDest('${d.id}','receptor',this.value)" placeholder="Receptor" style="width:140px;">
-      <datalist id="receptores-list">
-        ${RECEPTORES.map(r => `<option value="${r}">`).join('')}
-      </datalist>
+      <select style="min-width:150px;" onchange="updateDestReceptor('${d.id}',this.value)">
+        <option value="">— Receptor —</option>
+        ${parceiros.map(p => `<option value="${p}" ${d.receptor===p?'selected':''}>${p}</option>`).join('')}
+      </select>
     </td>
     <td><button class="del-btn" onclick="removeDest('${d.id}')">✕</button></td>
   </tr>`;
 }
 
 function renderLocRow(l, i) {
-  var rec   = (Number(l.venda)||0) * (Number(l.qtd)||0);
-  var pvVal = Number(l.venda)||0;
-  var cVal  = Number(l.custo)||0;
+  var diarias = Number(l.diarias) || 1;
+  var custo   = Number(l.custo)   || 0;
+  var pvVal   = parseFloat((custo * diarias * MARKUP).toFixed(2));
+  l.venda = pvVal;
+  var rec   = pvVal * (Number(l.qtd) || 0);
   var lid   = l.id;
   return '<tr id="loc-' + lid + '">'
     + '<td><input value="' + (l.descricao||'').replace(/"/g,'&quot;') + '" oninput="updateLoc(\'' + lid + '\',\'descricao\',this.value)" placeholder="Container 1000L, Cacamba" style="min-width:200px;"></td>'
     + '<td><input type="number" value="' + (l.qtd||1) + '" oninput="updateLoc(\'' + lid + '\',\'qtd\',this.value)" style="width:60px;" min="0" step="0.25"></td>'
-    + '<td><input value="' + (l.unidade||'Mes') + '" oninput="updateLoc(\'' + lid + '\',\'unidade\',this.value)" style="width:80px;"></td>'
-    + '<td><input type="number" value="' + cVal + '" id="loc-custo-' + lid + '" oninput="updateLocCusto(\'' + lid + '\',this.value)" style="width:100px;" step="0.01" min="0"></td>'
+    + '<td><input value="' + (l.unidade||'Mês') + '" oninput="updateLoc(\'' + lid + '\',\'unidade\',this.value)" style="width:80px;"></td>'
+    + '<td><input type="number" value="' + diarias + '" id="loc-dias-' + lid + '" oninput="updateLocDiarias(\'' + lid + '\',this.value)" style="width:70px;" min="0" step="0.5" title="Número de diárias"></td>'
+    + '<td><input type="number" value="' + custo + '" id="loc-custo-' + lid + '" oninput="updateLocCusto(\'' + lid + '\',this.value)" style="width:100px;" step="0.01" min="0"></td>'
     + '<td><input type="number" value="' + pvVal + '" id="loc-pv-' + lid + '" oninput="updateLoc(\'' + lid + '\',\'venda\',this.value)" style="width:100px;" step="0.01" min="0"></td>'
     + '<td class="total-cell" id="loc-rec-' + lid + '">' + fmt(rec) + '</td>'
     + '<td><button class="del-btn" onclick="removeLoc(\'' + lid + '\')">&#x2715;</button></td>'
@@ -2508,6 +3645,30 @@ function updateDestCusto(id, value) {
   refreshResults();
 }
 
+function _applyTabelaPreco(d) {
+  if (!d.tipo || !d.receptor) return;
+  const rd = getReceptoresData();
+  const preco = (rd.precos[d.tipo] || {})[d.receptor];
+  if (preco !== undefined && preco > 0) {
+    d.custoUnit = preco;
+    d.pvUnit = parseFloat((preco * MARKUP).toFixed(2));
+    // Atualiza inputs na tela
+    const elCusto = document.getElementById('dest-custo-' + d.id);
+    const elPv    = document.getElementById('dest-pv-'    + d.id);
+    if (elCusto) elCusto.value = d.custoUnit;
+    if (elPv)    elPv.value    = d.pvUnit;
+    // Atualiza totais inline
+    const rec  = d.pvUnit    * (Number(d.qtd)||0);
+    const desp = d.custoUnit * (Number(d.qtd)||0);
+    const elRec  = document.getElementById('dest-rec-'  + d.id);
+    const elDesp = document.getElementById('dest-desp-' + d.id);
+    if (elRec)  elRec.textContent  = fmt(rec);
+    if (elDesp) elDesp.textContent = fmt(desp);
+    refreshResults();
+    toast('💡 Custo preenchido: ' + fmt(preco) + ' via tabela', 'var(--retec)');
+  }
+}
+
 function updateDest(id, field, value) {
   if (!currentDRC) return;
   const d = currentDRC.destinacoes.find(x => x.id === id);
@@ -2555,14 +3716,33 @@ function updateOpCusto(id, value) {
 }
 
 
+function _recalcLoc(l) {
+  // Venda unitária = custo/diária × diárias × markup
+  const diarias = Number(l.diarias) || 1;
+  const qtd = Number(l.qtd) || 0;
+  const pvMarkup = parseFloat((l.custo * diarias * MARKUP).toFixed(2));
+  l.venda = pvMarkup;
+  const elPv = document.getElementById('loc-pv-' + l.id);
+  if (elPv) elPv.value = pvMarkup;
+  const despesa = l.custo * diarias * qtd;
+  const elDesp = document.getElementById('loc-desp-' + l.id);
+  if (elDesp) elDesp.textContent = fmt(despesa);
+  const rec = pvMarkup * qtd;
+  const elRec = document.getElementById('loc-rec-' + l.id);
+  if (elRec) elRec.textContent = fmt(rec);
+}
+
 function updateLoc(id, field, value) {
   if (!currentDRC) return;
   const l = currentDRC.locacoes.find(x => x.id === id);
   if (!l) return;
   l[field] = isNaN(value) || value === '' ? value : Number(value);
-  const rec = (Number(l.venda)||0) * (Number(l.qtd)||0);
-  const elRec = document.getElementById('loc-rec-' + id);
-  if (elRec) elRec.textContent = fmt(rec);
+  // Recalcula venda com base em diárias sempre que qtd ou venda mudar
+  if (field === 'qtd') {
+    const rec = (Number(l.venda)||0) * (Number(l.qtd)||0);
+    const elRec = document.getElementById('loc-rec-' + id);
+    if (elRec) elRec.textContent = fmt(rec);
+  }
   refreshResults();
 }
 function updateOp(id, field, value) {
@@ -3400,8 +4580,9 @@ function closeCadastros() {
 function showTab(tab) {
   currentTab = tab;
   // Tab styles
-  ['empresas','unidades','consultores','categorias','justificativas'].forEach(t => {
+  ['empresas','unidades','consultores','categorias','justificativas','usuarios','veiculos','receptores'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
+    if (!btn) return;
     if (t === tab) {
       btn.style.borderBottomColor = 'var(--retec)';
       btn.style.color = 'var(--retec)';
@@ -3410,12 +4591,23 @@ function showTab(tab) {
       btn.style.color = 'var(--text-muted)';
     }
   });
+
+  // Receptores: hide generic add bar, show custom panel
+  const addBar = document.getElementById('cadastro-add-bar');
+  const listEl = document.getElementById('cadastro-list');
+  if (tab === 'receptores') {
+    if (addBar) addBar.style.display = 'none';
+    renderReceptoresPanel();
+    return;
+  }
+  if (addBar) addBar.style.display = 'flex';
   renderCadastroList();
   document.getElementById('cadastro-new-input').placeholder =
     tab === 'empresas'       ? 'Ex: GVC Ambiental...' :
     tab === 'unidades'       ? 'Ex: CIA Sul — Simões Filho...' :
     tab === 'consultores'    ? 'Ex: João Silva...' :
     tab === 'categorias'     ? 'Ex: Gestão de Resíduos Industriais...' :
+    tab === 'veiculos'       ? 'Ex: Truck, Carreta, Basculante...' :
     'Ex: Preço acima do mercado...';
   document.getElementById('cadastro-new-input').focus();
 }
@@ -3428,7 +4620,7 @@ function renderCadastroList() {
     return;
   }
   const isEmpresa = currentTab === 'empresas';
-  const icon = isEmpresa ? '🏢' : currentTab === 'unidades' ? '🏭' : currentTab === 'consultores' ? '👤' : currentTab === 'categorias' ? '📁' : currentTab === 'usuarios' ? '👥' : '💬';
+  const icon = isEmpresa ? '🏢' : currentTab === 'unidades' ? '🏭' : currentTab === 'consultores' ? '👤' : currentTab === 'categorias' ? '📁' : currentTab === 'usuarios' ? '👥' : currentTab === 'veiculos' ? '🚛' : '💬';
   el.innerHTML = items.map(function(item, i) {
     const logo = isEmpresa ? (cadastros.empresasLogos[item] || '') : '';
     let logoHtml = '';
@@ -4262,6 +5454,10 @@ function onMunUFChange(val) {
   renderList();
   populateFilterSelects();
 })();
+
+
+// ═══════════════════════════════════════════════════════════
+// RECEPTORES / PARCEIROS — tabela de custos por destinação
 </script>
 
 </body>
