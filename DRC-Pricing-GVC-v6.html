@@ -2170,8 +2170,8 @@ function calcColeta(c) {
   const ajud = (Number(c.ajudante) || 0) * (Number(c.manobraAjudante) || 0);
   const mot = (Number(c.motorista) || 0) * (Number(c.manobraMot) || 0);
   const pernoite = (Number(c.pernoite) || 0) * 160;
-  const depr = (DEPR_VEICULO[c.veiculo] || 0) * numViagens;
-  const seguro = (SEGURO_VEICULO[c.veiculo] || 0) * numViagens;
+  const depr = km > 0 ? (DEPR_VEICULO[c.veiculo] || 0) * numViagens : 0;
+  const seguro = km > 0 ? (SEGURO_VEICULO[c.veiculo] || 0) * numViagens : 0;
   const limpeza = (Number(c.limpezaSAO) || 0) * 250;
   const cvr = Number(c.viagemCVR) || 0;
   const vacuo = Number(c.vacuoSucao) || 0;
