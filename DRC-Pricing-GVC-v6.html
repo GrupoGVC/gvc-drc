@@ -4637,7 +4637,7 @@ function moveCadastroItem(i, dir) {
 // INIT
 // ═══════════════════════════════════════════════════════════
 (async () => {
-  const user = await requireAuth(['gestor']);
+  const user = await requireAuth(['gestor', 'diretor', 'financeiro', 'consultor']);
   if (!user) return;
   const udisp = document.getElementById('user-display');
   if (udisp) udisp.textContent = '👤 ' + user.nome;

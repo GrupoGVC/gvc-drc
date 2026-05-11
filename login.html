@@ -106,7 +106,7 @@ body::before{
 function redirectByRole(role) {
   const next = new URLSearchParams(location.search).get('next');
   if (next && next.startsWith('/')) { location.href = next; return; }
-  location.href = role === 'gestor' ? 'DRC-Pricing-GVC-v6.html' : 'drc-operacional.html';
+  location.href = role === 'operacional' ? 'drc-operacional.html' : 'DRC-Pricing-GVC-v6.html';
 }
 
 // Enter key
