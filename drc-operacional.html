@@ -43,7 +43,7 @@ header {
   background:var(--surface); border-bottom:1px solid var(--border);
   position:relative; z-index:200; flex-shrink:0;
 }
-.logo-img { height:54px; width:auto; object-fit:contain; cursor:pointer; transition:opacity 0.15s; }
+.logo-img { height:82px; width:auto; object-fit:contain; cursor:pointer; transition:opacity 0.15s; }
 .logo-img:hover { opacity:0.8; }
 .logo-divider { width:1px; height:28px; background:var(--border2); }
 .logo-text { display:flex; flex-direction:column; gap:1px; }
@@ -1172,13 +1172,7 @@ setInterval(()=>{ const prev=currentDRC?.id; load(); renderHeader(); renderList(
 })();
 
 function handleLogoClick() {
-  const user = GvcAuth.getUser ? GvcAuth.getUser() : JSON.parse(localStorage.getItem('gvc_user') || 'null');
-  const role = user?.role || localStorage.getItem('gvc_role');
-  if (role === 'operacional') {
-    showToast('⛔ Acesso negado. Usuários operacionais não têm acesso ao sistema principal.', '#f87171');
-  } else {
-    location.href = 'DRC-Pricing-GVC-v6.html';
-  }
+  location.href = 'index.html';
 }
 function showToast(msg, color) {
   const t = document.createElement('div');
