@@ -885,6 +885,12 @@ input.manual-input.manual-filled {
         display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
         <span style="font-size:1.1rem;">🤝</span>Receptores
       </button>
+      <button id="tab-tabela-mo" onclick="showTab('tabela-mo')" style="
+        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent; border-top:1px solid var(--border);
+        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
+        <span style="font-size:1.1rem;">💰</span>Tabela MO
+      </button>
     </div>
 
     <!-- Body -->
@@ -1042,6 +1048,7 @@ let cadastros = {
   unidades:      ['CIA Sul — Simões Filho', 'Unidade Salvador', 'Unidade Feira de Santana'],
   consultores:   ['Lucianne', 'Consultor 2', 'Consultor 3'],
   categorias:    ['Coleta e Transporte', 'Tratamento / Destinação', 'Locação de Equipamentos', 'Consultoria / Laudos', 'Operações Especiais'],
+  tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, limpeza_sao: 250.00, pernoite: 160.00 },
   justificativas: [
     'Preço acima do mercado',
     'Cliente optou por outro fornecedor',
@@ -1056,6 +1063,56 @@ let cadastros = {
 };
 
 const VEICULOS = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caçamba 12 ton', 'Muck 15 ton', 'Retroescavadeira', 'Terceirizado', 'Especial'];
+function renderTabelaMOPanel() {
+  const el = document.getElementById('cadastro-list');
+  const mo = cadastros.tabelaMO || {};
+  const fmtBRL = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  const campos = [
+    { key: 'diaria_ajudante',  label: 'Diária do Ajudante',   icon: '👷', desc: 'Custo por diária de ajudante (R$/diária)' },
+    { key: 'diaria_motorista', label: 'Diária do Motorista',  icon: '🚛', desc: 'Custo por diária de motorista (R$/diária)' },
+    { key: 'limpeza_sao',      label: 'Limpeza de Caixa SAO', icon: '🧹', desc: 'Custo por limpeza de caixa SAO (R$/vez)' },
+    { key: 'pernoite',         label: 'Pernoite',             icon: '🌙', desc: 'Custo por pernoite (R$/diária)' },
+  ];
+
+  el.innerHTML = `
+    <div style="margin-bottom:18px;">
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;">
+        Valores de referência de mão de obra — usados automaticamente em todos os DRCs
+      </div>
+      ${campos.map(c => `
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;">
+          <span style="font-size:1.4rem;">${c.icon}</span>
+          <div style="flex:1;">
+            <div style="font-size:0.82rem;font-weight:600;color:var(--text);">${c.label}</div>
+            <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">${c.desc}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:0.75rem;color:var(--text-muted);">R$</span>
+            <input type="number" step="0.01" min="0"
+              value="${Number(mo[c.key]||0).toFixed(2)}"
+              style="width:90px;background:var(--surface);border:1px solid var(--border2);border-radius:7px;
+                     color:var(--text);font-family:var(--font-mono);font-size:0.85rem;padding:7px 10px;
+                     outline:none;text-align:right;transition:border-color 0.15s;"
+              onfocus="this.style.borderColor='var(--retec)'"
+              onblur="this.style.borderColor='var(--border2)'"
+              onchange="saveTabelaMO('${c.key}', this.value)">
+          </div>
+        </div>
+      `).join('')}
+      <div style="margin-top:16px;padding:10px 14px;background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.2);border-radius:8px;font-size:0.75rem;color:var(--text-muted);">
+        💡 Alterações são salvas automaticamente e aplicadas a novos DRCs. DRCs já criados precisam ser atualizados manualmente.
+      </div>
+    </div>`;
+}
+
+function saveTabelaMO(key, val) {
+  if (!cadastros.tabelaMO) cadastros.tabelaMO = {};
+  cadastros.tabelaMO[key] = parseFloat(val) || 0;
+  save();
+  toast('✅ Tabela MO atualizada', '#00c896');
+}
+
 function getReceptoresData() {
   if (!cadastros.receptores) cadastros.receptores = JSON.parse(JSON.stringify(RECEPTORES_DEFAULT));
   return cadastros.receptores;
@@ -2086,6 +2143,7 @@ async function load() {
       if (!cadastros.usuarios)       cadastros.usuarios       = [];
       if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
       if (!cadastros.receptores) cadastros.receptores = null;
+      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, limpeza_sao: 250.00, pernoite: 160.00 };
     }
   } catch(e) { console.error('load cadastros error:', e); }
 }
@@ -2137,7 +2195,7 @@ function newColeta(n) {
     pernoite: 0, limpezaSAO: 0, viagemCVR: 0, vacuoSucao: 0,
     retroescavadeira: 0, kitBomba: 0,
     precoBaseVenda: 0,
-    dieselPorLitro: 6.2, manobraAjudante: 0, manobraMot: 0,
+    dieselPorLitro: 6.2, manobraAjudante: cadastros.tabelaMO?.diaria_ajudante || 180, manobraMot: cadastros.tabelaMO?.diaria_motorista || 220,
     manutencao: 0, ipva: 0,
     custoOperacao: 0, custoDestinacao: 0,
     tempoServicoH: 0, tempoServicoMin: 0,
@@ -2169,10 +2227,10 @@ function calcColeta(c) {
   const pedagio = (Number(c.pedagio) || 0) * numViagens;
   const ajud = (Number(c.ajudante) || 0) * (Number(c.manobraAjudante) || 0);
   const mot = (Number(c.motorista) || 0) * (Number(c.manobraMot) || 0);
-  const pernoite = (Number(c.pernoite) || 0) * 160;
+  const pernoite = (Number(c.pernoite) || 0) * (Number(cadastros.tabelaMO?.pernoite) || 160);
   const depr = km > 0 ? (DEPR_VEICULO[c.veiculo] || 0) * numViagens : 0;
   const seguro = km > 0 ? (SEGURO_VEICULO[c.veiculo] || 0) * numViagens : 0;
-  const limpeza = (Number(c.limpezaSAO) || 0) * 250;
+  const limpeza = (Number(c.limpezaSAO) || 0) * (Number(cadastros.tabelaMO?.limpeza_sao) || 250);
   const cvr = Number(c.viagemCVR) || 0;
   const vacuo = Number(c.vacuoSucao) || 0;
   const retro = Number(c.retroescavadeira) || 0;
@@ -2870,8 +2928,8 @@ function renderColeta(c, i) {
       <div class="form-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px;">
         <div class="field"><label>Ajudante (diárias)</label><input type="number" value="${c.ajudante||0}" oninput="updateColeta('${c.id}','ajudante',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-ajud-${c.id}">${fmt((c.ajudante||0)*(c.manobraAjudante||0))}</span></div>
         <div class="field"><label>Motorista (diárias)</label><input type="number" value="${c.motorista||0}" oninput="updateColeta('${c.id}','motorista',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-mot-${c.id}">${fmt((c.motorista||0)*(c.manobraMot||0))}</span></div>
-        <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*160)}</span></div>
-        <div class="field"><label>Limpeza SAO (vezes)</label><input type="number" value="${c.limpezaSAO||0}" oninput="updateColeta('${c.id}','limpezaSAO',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-limp-${c.id}">${fmt((c.limpezaSAO||0)*250)}</span></div>
+        <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*(cadastros.tabelaMO?.pernoite||160))}</span></div>
+        <div class="field"><label>Limpeza SAO (vezes)</label><input type="number" value="${c.limpezaSAO||0}" oninput="updateColeta('${c.id}','limpezaSAO',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-limp-${c.id}">${fmt((c.limpezaSAO||0)*(cadastros.tabelaMO?.limpeza_sao||250))}</span></div>
       </div>
       <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Serviços Extras</div>
       <div class="form-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px;">
@@ -3459,8 +3517,8 @@ function updateColeta(id, field, value) {
   };
   upd('val-ajud-'  + id, (Number(c.ajudante)||0)       * (Number(c.manobraAjudante)||0));
   upd('val-mot-'   + id, (Number(c.motorista)||0)       * (Number(c.manobraMot)||0));
-  upd('val-pern-'  + id, (Number(c.pernoite)||0)        * 160);
-  upd('val-limp-'  + id, (Number(c.limpezaSAO)||0)      * 250);
+  upd('val-pern-'  + id, (Number(c.pernoite)||0)        * (Number(cadastros.tabelaMO?.pernoite)||160));
+  upd('val-limp-'  + id, (Number(c.limpezaSAO)||0)      * (Number(cadastros.tabelaMO?.limpeza_sao)||250));
   // Update coleta result block
   const rc = calcColeta(c);
   const el = document.getElementById('coleta-' + id);
@@ -4440,7 +4498,7 @@ function closeCadastros() {
 function showTab(tab) {
   currentTab = tab;
   // Tab styles
-  ['empresas','unidades','consultores','categorias','justificativas','usuarios','veiculos','receptores'].forEach(t => {
+  ['empresas','unidades','consultores','categorias','justificativas','usuarios','veiculos','receptores','tabela-mo'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
     if (!btn) return;
     if (t === tab) {
@@ -4458,6 +4516,11 @@ function showTab(tab) {
   if (tab === 'receptores') {
     if (addBar) addBar.style.display = 'none';
     renderReceptoresPanel();
+    return;
+  }
+  if (tab === 'tabela-mo') {
+    if (addBar) addBar.style.display = 'none';
+    renderTabelaMOPanel();
     return;
   }
   if (addBar) addBar.style.display = 'flex';
