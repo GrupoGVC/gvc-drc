@@ -1159,7 +1159,7 @@ setInterval(()=>{ const prev=currentDRC?.id; load(); renderHeader(); renderList(
 // INIT
 // ═══════════════════════════════════════════════════════════
 (async () => {
-  const user = await requireAuth(['analista','gestor']);
+  const user = await requireAuth(['operacional','gestor']);
   if (!user) return;
   const uEl = document.getElementById('user-name');
   if (uEl) uEl.textContent = '👤 ' + user.nome;
