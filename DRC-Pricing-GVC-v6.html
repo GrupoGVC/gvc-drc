@@ -1394,7 +1394,23 @@ function renderAutorSelect() {
   const users = cadastros.usuarios || [];
   sel.innerHTML = '<option value="">— Selecione o usuário —</option>'
     + users.map(u => '<option value="' + u.replace(/"/g, '&quot;') + '">' + u + '</option>').join('');
-  sel.value = '';
+  // Auto-preenche com o usuário logado
+  try {
+    const loggedUser = JSON.parse(localStorage.getItem('gvc_user') || '{}');
+    if (loggedUser.nome) {
+      // Tenta encontrar na lista primeiro
+      const match = users.find(u => u === loggedUser.nome || u.toLowerCase().includes(loggedUser.nome.split(' ')[0].toLowerCase()));
+      sel.value = match || '';
+      // Se não encontrar na lista, adiciona dinamicamente
+      if (!sel.value && loggedUser.nome) {
+        const opt = document.createElement('option');
+        opt.value = loggedUser.nome;
+        opt.textContent = loggedUser.nome;
+        sel.appendChild(opt);
+        sel.value = loggedUser.nome;
+      }
+    }
+  } catch(e) {}
 }
 
 function selectJustOption(val) {
