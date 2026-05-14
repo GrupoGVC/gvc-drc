@@ -788,6 +788,17 @@ function renderDetail() {
 // ── Phase 1: Aguardando ──
 function renderPhaseAg(drc) {
   const users = (cadastros.usuarios||[]).map(u=>`<option value="${u}">${u}</option>`).join('');
+  // Auto-fill analista após renderização
+  setTimeout(() => {
+    try {
+      const loggedUser = JSON.parse(localStorage.getItem('gvc_user') || '{}');
+      const nome = loggedUser.nome || '—';
+      const dispEl = document.getElementById('conf-analista-nome');
+      const hidEl  = document.getElementById('conf-analista');
+      if (dispEl) dispEl.textContent = nome;
+      if (hidEl)  hidEl.value = nome;
+    } catch(e) {}
+  }, 0);
   const colSummary = (drc.coletas||[]).map((c,i)=>`
     <div class="coleta-summary">
       <div class="cs-top">
@@ -845,10 +856,13 @@ function renderPhaseAg(drc) {
             </div>
             <div class="exec-field">
               <label>Analista Responsável</label>
-              <select id="conf-analista">
-                <option value="">— Selecione —</option>
-                ${users}
-              </select>
+              <div id="conf-analista-display" style="
+                background:var(--surface2,#1e2530);border:1px solid var(--border,#2a3340);
+                border-radius:8px;padding:8px 12px;font-size:0.85rem;color:var(--text,#dde4ec);
+                opacity:0.85;cursor:default;min-height:36px;display:flex;align-items:center;gap:6px;">
+                👤 <span id="conf-analista-nome">—</span>
+              </div>
+              <input type="hidden" id="conf-analista" value="">
             </div>
             <div class="exec-field" style="flex:2;">
               <label>Observação Inicial</label>
@@ -1073,7 +1087,6 @@ function confirmarExecucao() {
   const anal = document.getElementById('conf-analista')?.value;
   const obs  = document.getElementById('conf-obs')?.value||'';
   if(!data) { toast('⚠️ Informe a data de execução','#fb923c'); return; }
-  if(!anal) { toast('⚠️ Selecione o analista responsável','#fb923c'); return; }
 
   showModal('▶ Confirmar Execução','⚙',
     `<div style="font-size:.84rem;line-height:1.8;color:var(--text-muted);">
