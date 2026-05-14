@@ -2585,15 +2585,37 @@ function makeOptions(arr, selected) {
   return (arr||[]).map(v => '<option value="'+v+'"'+(v===selected?' selected':'')+'>'+v+'</option>').join('');
 }
 
+const LOCKED_STATUSES = ['aguardando_execucao', 'validacao_custos'];
+
+function isLocked(drc) {
+  return drc && LOCKED_STATUSES.includes(drc.status);
+}
+
 function renderForm() {
   if (!currentDRC) return;
   const drc = currentDRC;
+  const locked = isLocked(drc);
   const r = calcDRC(drc);
   const form = document.getElementById('drc-form');
   const statusMeta = STATUS_META[drc.status] || { label: drc.status, icon: '' };
   const histLen = (drc.statusHistorico || []).length;
 
-  form.innerHTML =
+  // Lock banner HTML (inserted at top of form when locked)
+  const lockBanner = locked ? `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;margin-bottom:4px;
+      background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);border-radius:10px;">
+      <span style="font-size:1.3rem;">🔒</span>
+      <div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.07em;">
+          DRC em execução — somente leitura
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">
+          Este DRC está com status <strong style="color:#a78bfa;">${statusMeta.icon} ${statusMeta.label}</strong> e não pode ser editado. Aguarde a conclusão pelo setor operacional.
+        </div>
+      </div>
+    </div>` : '';
+
+  form.innerHTML = lockBanner +
   '<!-- CABEÇALHO -->' +
   '<div class="form-section">' +
     '<div class="section-header">' +
@@ -2764,8 +2786,28 @@ function renderForm() {
   // Popular textarea de obsFinais com valor salvo
   const taObs = document.getElementById('obs-finais-ta');
   if (taObs) taObs.value = drc.obsFinais || '';
-}
 
+  // Se DRC está bloqueado, desabilita todos os inputs/selects/textareas/buttons de edição
+  if (locked) {
+    const saveBtn = document.getElementById('btn-save');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.style.opacity = '0.35'; saveBtn.style.cursor = 'not-allowed'; }
+    // Desabilita todos os campos do form
+    form.querySelectorAll('input, select, textarea, button').forEach(el => {
+      // Mantém botões de PDF e status visíveis mas desabilita edição
+      if (el.classList.contains('status-change-btn')) return; // mantém alterar status
+      if (el.onclick && el.onclick.toString().includes('exportPDF')) return;
+      el.disabled = true;
+      if (el.tagName === 'BUTTON') el.style.opacity = '0.35';
+    });
+    // Esconde botões de adicionar/remover
+    form.querySelectorAll('.add-btn, .add-coleta-btn, [onclick*="addColeta"], [onclick*="addDest"], [onclick*="addLocacao"], [onclick*="addOp"], [onclick*="removeColeta"], [onclick*="deleteDRC"]').forEach(el => {
+      el.style.display = 'none';
+    });
+  } else {
+    const saveBtn = document.getElementById('btn-save');
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = '1'; saveBtn.style.cursor = ''; }
+  }
+}
 function renderResults(r) {
   var mPct   = (r.margem * 100).toFixed(1);
   var mColor = r.margem > 0.20 ? '#00c896' : r.margem > 0.10 ? '#f5a623' : '#e84393';
@@ -3381,6 +3423,7 @@ function removeFoto(coletaId, idx) {
 
 function autoSave() {
   if (!currentDRC) return;
+  if (isLocked(currentDRC)) return; // não salva se bloqueado
   currentDRC.dataAlteracao = new Date().toISOString();
   var idx = drcs.findIndex(function(d){ return d.id === currentDRC.id; });
   if (idx >= 0) drcs[idx] = currentDRC;
@@ -3747,6 +3790,7 @@ async function newDRC() {
 
 function saveDRC() {
   if (!currentDRC) { toast('⚠️ Nenhum DRC aberto', '#f5a623'); return; }
+  if (isLocked(currentDRC)) { toast('🔒 DRC em execução — edição bloqueada', '#a78bfa'); return; }
   const idx = drcs.findIndex(d => d.id === currentDRC.id);
   if (idx >= 0) drcs[idx] = currentDRC;
   else drcs.push(currentDRC);
