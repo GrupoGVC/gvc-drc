@@ -1048,7 +1048,7 @@ let cadastros = {
   unidades:      ['CIA Sul — Simões Filho', 'Unidade Salvador', 'Unidade Feira de Santana'],
   consultores:   ['Lucianne', 'Consultor 2', 'Consultor 3'],
   categorias:    ['Coleta e Transporte', 'Tratamento / Destinação', 'Locação de Equipamentos', 'Consultoria / Laudos', 'Operações Especiais'],
-  tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, limpeza_sao: 250.00, pernoite: 160.00 },
+  tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 },
   justificativas: [
     'Preço acima do mercado',
     'Cliente optou por outro fornecedor',
@@ -1071,7 +1071,6 @@ function renderTabelaMOPanel() {
   const campos = [
     { key: 'diaria_ajudante',  label: 'Diária do Ajudante',   icon: '👷', desc: 'Custo por diária de ajudante (R$/diária)' },
     { key: 'diaria_motorista', label: 'Diária do Motorista',  icon: '🚛', desc: 'Custo por diária de motorista (R$/diária)' },
-    { key: 'limpeza_sao',      label: 'Limpeza de Caixa SAO', icon: '🧹', desc: 'Custo por limpeza de caixa SAO (R$/vez)' },
     { key: 'pernoite',         label: 'Pernoite',             icon: '🌙', desc: 'Custo por pernoite (R$/diária)' },
   ];
 
@@ -2143,7 +2142,7 @@ async function load() {
       if (!cadastros.usuarios)       cadastros.usuarios       = [];
       if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
       if (!cadastros.receptores) cadastros.receptores = null;
-      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, limpeza_sao: 250.00, pernoite: 160.00 };
+      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 };
     }
   } catch(e) { console.error('load cadastros error:', e); }
 }
@@ -2230,7 +2229,7 @@ function calcColeta(c) {
   const pernoite = (Number(c.pernoite) || 0) * (Number(cadastros.tabelaMO?.pernoite) || 160);
   const depr = km > 0 ? (DEPR_VEICULO[c.veiculo] || 0) * numViagens : 0;
   const seguro = km > 0 ? (SEGURO_VEICULO[c.veiculo] || 0) * numViagens : 0;
-  const limpeza = (Number(c.limpezaSAO) || 0) * (Number(cadastros.tabelaMO?.limpeza_sao) || 250);
+  const limpeza = 0;
   const cvr = Number(c.viagemCVR) || 0;
   const vacuo = Number(c.vacuoSucao) || 0;
   const retro = Number(c.retroescavadeira) || 0;
@@ -2929,7 +2928,7 @@ function renderColeta(c, i) {
         <div class="field"><label>Ajudante (diárias)</label><input type="number" value="${c.ajudante||0}" oninput="updateColeta('${c.id}','ajudante',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-ajud-${c.id}">${fmt((c.ajudante||0)*(c.manobraAjudante||0))}</span></div>
         <div class="field"><label>Motorista (diárias)</label><input type="number" value="${c.motorista||0}" oninput="updateColeta('${c.id}','motorista',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-mot-${c.id}">${fmt((c.motorista||0)*(c.manobraMot||0))}</span></div>
         <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*(cadastros.tabelaMO?.pernoite||160))}</span></div>
-        <div class="field"><label>Limpeza SAO (vezes)</label><input type="number" value="${c.limpezaSAO||0}" oninput="updateColeta('${c.id}','limpezaSAO',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-limp-${c.id}">${fmt((c.limpezaSAO||0)*(cadastros.tabelaMO?.limpeza_sao||250))}</span></div>
+        
       </div>
       <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Serviços Extras</div>
       <div class="form-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px;">
@@ -3518,7 +3517,7 @@ function updateColeta(id, field, value) {
   upd('val-ajud-'  + id, (Number(c.ajudante)||0)       * (Number(c.manobraAjudante)||0));
   upd('val-mot-'   + id, (Number(c.motorista)||0)       * (Number(c.manobraMot)||0));
   upd('val-pern-'  + id, (Number(c.pernoite)||0)        * (Number(cadastros.tabelaMO?.pernoite)||160));
-  upd('val-limp-'  + id, (Number(c.limpezaSAO)||0)      * (Number(cadastros.tabelaMO?.limpeza_sao)||250));
+  
   // Update coleta result block
   const rc = calcColeta(c);
   const el = document.getElementById('coleta-' + id);
