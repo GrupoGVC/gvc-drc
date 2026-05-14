@@ -1439,10 +1439,10 @@ function confirmStatusChange() {
   if (!currentDRC.statusHistorico) currentDRC.statusHistorico = [];
   currentDRC.statusHistorico.push(entry);
   currentDRC.status = pendingStatus;
-  // Auto-save
+  // Salva no backend (status + data_json atualizados)
   const idx = drcs.findIndex(d => d.id === currentDRC.id);
   if (idx >= 0) drcs[idx] = currentDRC;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ drcs, counter: drcCounter }));
+  try { await GvcDRC.save(currentDRC); } catch(e) { toast('❌ Erro ao salvar status: ' + e.message, '#f87171'); }
   closeStatusModal();
   renderForm();
   renderList();
@@ -2573,11 +2573,16 @@ async function selectDRC(id) {
     if (idx >= 0) drcs[idx] = { ...drcs[idx], ...currentDRC };
   } catch(e) { currentDRC = drcs.find(d => d.id === id); }
   if (!currentDRC) return;
+  // Garante campos mínimos para evitar erros no render
+  if (!currentDRC.coletas)     currentDRC.coletas     = [];
+  if (!currentDRC.destinacoes) currentDRC.destinacoes = [];
+  if (!currentDRC.locacoes)    currentDRC.locacoes    = [];
+  if (!currentDRC.opEspeciais) currentDRC.opEspeciais = [];
+  if (!currentDRC.statusHistorico) currentDRC.statusHistorico = [];
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('drc-form').style.display = 'block';
-  renderForm();
+  try { renderForm(); } catch(e) { console.error('renderForm error:', e); toast('⚠️ Erro ao renderizar DRC', '#f5a623'); }
   renderList();
-  // fecha sidebar no mobile ao selecionar um DRC
   closeMobileSidebar();
 }
 
