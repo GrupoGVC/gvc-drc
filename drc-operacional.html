@@ -822,12 +822,11 @@ function renderPhaseAg(drc) {
         <td>${d.tipo||'—'}</td>
         <td>${d.receptor||'—'}</td>
         <td style="font-family:var(--mono);">${d.qtd||0} ${d.unidade||'kg'}</td>
-        <td style="font-family:var(--mono);">R$ ${Number(d.custoUnit||0).toFixed(2)}</td>
-        <td style="font-family:var(--mono);">R$ ${Number(d.pvUnit||0).toFixed(2)}</td>
+
       </tr>`).join('');
     return `<div class="sec-div">Destinações Planejadas</div>
       <table class="vtable"><thead><tr>
-        <th>Tipo / Resíduo</th><th>Receptor</th><th>Qtd.</th><th>Custo Unit.</th><th>PV Unit.</th>
+        <th>Tipo / Resíduo</th><th>Receptor</th><th>Qtd.</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   })();
 
@@ -932,7 +931,6 @@ function renderPhaseVal(drc) {
     const rows = drc.destinacoes.map(d=>{
       const r=drc.execucao.destReal[d.id]||{};
       const fKg = r.kg_real!==undefined&&r.kg_real!==''?' filled':'';
-      const fCu = r.custo_real!==undefined&&r.custo_real!==''?' filled':'';
       return `<tr>
         <td>${d.tipo||'—'}</td><td>${d.receptor||'—'}</td>
         <td style="font-family:var(--mono);">${d.qtd||0} ${d.unidade||'kg'}</td>
@@ -940,9 +938,7 @@ function renderPhaseVal(drc) {
              value="${r.kg_real||''}" onchange="updateDestReal('${d.id}','kg_real',this.value)"
              oninput="this.classList.toggle('filled',!!this.value)">
            <span style="font-family:var(--mono);font-size:.62rem;color:var(--text-muted);"> ${d.unidade||'kg'}</span></td>
-        <td><input type="number" class="${fCu}" style="width:88px;" placeholder="${d.custoUnit||0}" step=".01" min="0"
-             value="${r.custo_real||''}" onchange="updateDestReal('${d.id}','custo_real',this.value)"
-             oninput="this.classList.toggle('filled',!!this.value)"></td>
+
         <td><input type="text" style="width:110px;" placeholder="${d.receptor||'—'}"
              value="${r.receptor_real||''}" onchange="updateDestReal('${d.id}','receptor_real',this.value)"></td>
       </tr>`;
@@ -950,7 +946,7 @@ function renderPhaseVal(drc) {
     return `<div class="sec-div">Destinações — Validação</div>
       <table class="vtable"><thead><tr>
         <th>Tipo</th><th>Receptor Plan.</th><th>Qtd. Plan.</th>
-        <th class="real">Qtd. Real</th><th class="real">Custo Real</th><th class="real">Receptor Real</th>
+        <th class="real">Qtd. Real</th><th class="real">Receptor Real</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   })();
 
@@ -966,13 +962,12 @@ function renderPhaseVal(drc) {
         <td><input type="number" style="width:80px;" placeholder="${l.qtd||1}"
              value="${r.qtd_real||''}" onchange="updateLocReal('${l.id}','qtd_real',this.value)"
              oninput="this.classList.toggle('filled',!!this.value)"></td>
-        <td><input type="number" style="width:88px;" placeholder="${l.custo||0}" step=".01"
-             value="${r.custo_real||''}" onchange="updateLocReal('${l.id}','custo_real',this.value)"></td>
+
       </tr>`;
     }).join('');
     return `<div class="sec-div">Locações — Validação</div>
       <table class="vtable"><thead><tr>
-        <th>Descrição</th><th>Qtd. Plan.</th><th class="real">Qtd. Real</th><th class="real">Custo Real</th>
+        <th>Descrição</th><th>Qtd. Plan.</th><th class="real">Qtd. Real</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   })();
 
@@ -987,8 +982,7 @@ function renderPhaseVal(drc) {
         <td style="font-family:var(--mono);">${o.qtd||1} ${o.unidade||'Serv.'}</td>
         <td><input type="number" style="width:80px;" placeholder="${o.qtd||1}"
              value="${r.qtd_real||''}" onchange="updateOpReal('${o.id}','qtd_real',this.value)"></td>
-        <td><input type="number" style="width:88px;" placeholder="${o.custo||0}" step=".01"
-             value="${r.custo_real||''}" onchange="updateOpReal('${o.id}','custo_real',this.value)"></td>
+
         <td><input type="text" style="width:110px;" placeholder="${o.fornecedor||'—'}"
              value="${r.fornecedor_real||''}" onchange="updateOpReal('${o.id}','fornecedor_real',this.value)"></td>
       </tr>`;
@@ -996,7 +990,7 @@ function renderPhaseVal(drc) {
     return `<div class="sec-div">Operações Especiais — Validação</div>
       <table class="vtable"><thead><tr>
         <th>Descrição</th><th>Qtd. Plan.</th><th class="real">Qtd. Real</th>
-        <th class="real">Custo Real</th><th class="real">Fornecedor Real</th>
+        <th class="real">Fornecedor Real</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   })();
 
@@ -1087,7 +1081,7 @@ function summaryBar(drc) {
     <div class="sb-item"><div class="sb-val cyan">${kmReal.toFixed(0)} km</div><div class="sb-lbl">KM Real Total</div></div>
     <div class="sb-item"><div class="sb-val ${diffColor}">${diff>=0?'+':''}${diff.toFixed(0)} km</div><div class="sb-lbl">Δ vs Planejado (${kmPlan.toFixed(0)}km)</div></div>
     <div class="sb-item"><div class="sb-val yellow">${pesoReal.toFixed(0)} kg</div><div class="sb-lbl">Peso Total Coletado</div></div>
-    <div class="sb-item"><div class="sb-val ${custoDest>custoDestPlan?'red':'green'}">R$ ${custoDest.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div><div class="sb-lbl">Custo Dest. Real</div></div>
+
   </div>`;
 }
 
