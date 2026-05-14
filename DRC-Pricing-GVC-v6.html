@@ -3761,12 +3761,13 @@ function saveDRC() {
 function deleteDRC(id) {
   if (!confirm('Excluir este DRC permanentemente?')) return;
   drcs = drcs.filter(d => d.id !== id);
-  currentDRC = null;
-  if(currentDRC) GvcDRC.save(currentDRC).catch(()=>{});
+  if (currentDRC && currentDRC.id === id) currentDRC = null;
   document.getElementById('empty-state').style.display = 'flex';
   document.getElementById('drc-form').style.display = 'none';
   renderList();
-  toast('🗑 DRC excluído', '#e84393');
+  GvcDRC.delete(id)
+    .then(() => toast('🗑 DRC excluído', '#e84393'))
+    .catch(() => toast('⚠️ Erro ao excluir no servidor', '#f5a623'));
 }
 
 // ═══════════════════════════════════════════════════════════
