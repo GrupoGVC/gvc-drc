@@ -1409,7 +1409,7 @@ function syncJustText(val) {
 
 
 
-function confirmStatusChange() {
+async function confirmStatusChange() {
   if (!pendingStatus || !currentDRC) return;
   const meta = STATUS_META[pendingStatus];
   if (meta?.neg && !pendingJust.trim()) {
