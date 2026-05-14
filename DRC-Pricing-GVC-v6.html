@@ -3586,6 +3586,24 @@ function updateColeta(id, field, value) {
   refreshResults();
 }
 
+function updateDestTipo(id, value) {
+  if (!currentDRC) return;
+  const d = currentDRC.destinacoes.find(x => x.id === id);
+  if (!d) return;
+  d.tipo = value;
+  autoSave();
+  _applyTabelaPreco(d);
+}
+
+function updateDestReceptor(id, value) {
+  if (!currentDRC) return;
+  const d = currentDRC.destinacoes.find(x => x.id === id);
+  if (!d) return;
+  d.receptor = value;
+  autoSave();
+  _applyTabelaPreco(d);
+}
+
 function updateDestCusto(id, value) {
   if (!currentDRC) return;
   const d = currentDRC.destinacoes.find(x => x.id === id);
