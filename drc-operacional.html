@@ -762,6 +762,27 @@ function renderDetail() {
     ${isAg  ? renderPhaseAg(drc)  : ''}
     ${isVal ? renderPhaseVal(drc) : ''}
   `;
+
+  // Auto-preenche analista com o usuário logado
+  const selAnalista = document.getElementById('conf-analista');
+  if (selAnalista) {
+    try {
+      const loggedUser = JSON.parse(localStorage.getItem('gvc_user') || '{}');
+      const nome = loggedUser.nome || '';
+      if (nome) {
+        const opt = [...selAnalista.options].find(o => o.value === nome);
+        if (opt) {
+          selAnalista.value = nome;
+        } else {
+          const newOpt = document.createElement('option');
+          newOpt.value = nome;
+          newOpt.textContent = nome;
+          selAnalista.appendChild(newOpt);
+          selAnalista.value = nome;
+        }
+      }
+    } catch(e) {}
+  }
 }
 
 // ── Phase 1: Aguardando ──
