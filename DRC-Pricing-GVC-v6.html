@@ -1275,12 +1275,15 @@ function removeReceptorResiduo(ri) {
 // STATUS SYSTEM
 // ═══════════════════════════════════════════════════════════
 const STATUS_META = {
-  rascunho:   { label: 'Rascunho',    icon: '📝', color: '#8898aa', neg: false, desc: 'DRC em elaboração, ainda não enviado' },
-  enviado:    { label: 'Enviado',     icon: '📤', color: '#3b9eff', neg: false, desc: 'Enviado ao consultor interno para análise' },
-  em_analise: { label: 'Em Análise',  icon: '🔍', color: '#f5a623', neg: false, desc: 'Consultor está avaliando a proposta' },
-  aprovado:   { label: 'Aprovado',    icon: '✅', color: '#00c896', neg: false, desc: 'Proposta aprovada pelo consultor' },
-  reprovado:  { label: 'Reprovado',   icon: '❌', color: '#e84393', neg: true,  desc: 'Proposta reprovada — justificativa obrigatória' },
-  cancelado:  { label: 'Cancelado',   icon: '🚫', color: '#e06060', neg: true,  desc: 'DRC cancelado — justificativa obrigatória' },
+  rascunho:            { label: 'Rascunho',             icon: '📝', color: '#8898aa', neg: false, desc: 'DRC em elaboração, ainda não enviado' },
+  enviado:             { label: 'Enviado',              icon: '📤', color: '#3b9eff', neg: false, desc: 'Enviado ao consultor interno para análise' },
+  em_analise:          { label: 'Em Análise',           icon: '🔍', color: '#f5a623', neg: false, desc: 'Consultor está avaliando a proposta' },
+  aprovado:            { label: 'Aprovado',             icon: '✅', color: '#00c896', neg: false, desc: 'Proposta aprovada pelo consultor' },
+  reprovado:           { label: 'Reprovado',            icon: '❌', color: '#e84393', neg: true,  desc: 'Proposta reprovada — justificativa obrigatória' },
+  cancelado:           { label: 'Cancelado',            icon: '🚫', color: '#e06060', neg: true,  desc: 'DRC cancelado — justificativa obrigatória' },
+  aguardando_execucao: { label: 'Aguardando Execução',  icon: '⏳', color: '#a78bfa', neg: false, desc: 'Aguardando confirmação de data pelo setor operacional' },
+  validacao_custos:    { label: 'Validação de Custos',  icon: '🔎', color: '#fb923c', neg: false, desc: 'Em validação dos custos reais pelo setor operacional' },
+  concluido:           { label: 'Concluído',            icon: '🏁', color: '#22d3ee', neg: false, desc: 'DRC executado e custos validados pelo operacional' },
 };
 
 let pendingStatus = null;
