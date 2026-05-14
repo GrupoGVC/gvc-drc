@@ -881,10 +881,20 @@ function renderPhaseVal(drc) {
   if(!drc.execucao) drc.execucao={};
 
   const execInfo = drc.execucao.dataExecucao ? `
-    <div class="exec-info-pill">
-      <span>📅 <b>Execução:</b> ${new Date(drc.execucao.dataExecucao+'T00:00:00').toLocaleDateString('pt-BR')}</span>
-      ${drc.execucao.analista?`<span>👤 <b>Analista:</b> ${drc.execucao.analista}</span>`:''}
-      ${drc.execucao.obsInicial?`<span>📝 ${drc.execucao.obsInicial}</span>`:''}
+    <div class="exec-info-pill" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span>📅 <b>Execução:</b> ${new Date(drc.execucao.dataExecucao+'T00:00:00').toLocaleDateString('pt-BR')}</span>
+        ${drc.execucao.analista?`<span>👤 <b>Analista:</b> ${drc.execucao.analista}</span>`:''}
+        ${drc.execucao.obsInicial?`<span>📝 ${drc.execucao.obsInicial}</span>`:''}
+      </div>
+      <button onclick="editarDataExecucao()" style="
+        background:none;border:1px solid rgba(251,146,60,.4);border-radius:6px;
+        color:#fb923c;font-size:.72rem;font-family:var(--mono);padding:4px 10px;
+        cursor:pointer;transition:all .15s;white-space:nowrap;"
+        onmouseover="this.style.background='rgba(251,146,60,.1)'"
+        onmouseout="this.style.background='none'">
+        ✏ Editar data
+      </button>
     </div>` : '';
 
   const coletaForms = (drc.coletas||[]).map((c,i)=>{
@@ -1082,6 +1092,47 @@ function summaryBar(drc) {
 }
 
 // ══════════════════ ACTIONS ══════════════════
+function editarDataExecucao() {
+  if(!currentDRC?.execucao) return;
+  const dataAtual = currentDRC.execucao.dataExecucao || new Date().toISOString().slice(0,10);
+
+  showModal('✏ Editar Data de Execução','📅',`
+    <div style="font-size:.84rem;line-height:1.8;color:var(--text-muted);margin-bottom:12px;">
+      DRC <b style="color:var(--text);">${currentDRC.numero}</b> — <b style="color:var(--text);">${currentDRC.cliente||'—'}</b><br>
+      Data atual: <b style="color:var(--accent);">${new Date(dataAtual+'T00:00:00').toLocaleDateString('pt-BR')}</b>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div>
+        <label style="font-family:var(--mono);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:4px;">Nova Data de Execução</label>
+        <input type="date" id="edit-data-exec" value="${dataAtual}"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
+                 color:var(--text);font-family:var(--mono);font-size:.85rem;padding:8px 12px;outline:none;">
+      </div>
+      <div>
+        <label style="font-family:var(--mono);font-size:.65rem;color:var(--orange);text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:4px;">⚠ Justificativa (obrigatória)</label>
+        <textarea id="edit-data-just" rows="3" placeholder="Descreva o motivo da alteração da data..."
+          style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
+                 color:var(--text);font-family:var(--font);font-size:.84rem;padding:8px 12px;
+                 outline:none;resize:vertical;"></textarea>
+      </div>
+    </div>`,
+    () => {
+      const novaData = document.getElementById('edit-data-exec')?.value;
+      const just     = document.getElementById('edit-data-just')?.value?.trim();
+      if(!novaData) { toast('⚠️ Informe a nova data','#fb923c'); return false; }
+      if(!just)     { toast('⚠️ Justificativa obrigatória','#e84393'); return false; }
+      const dataAnterior = currentDRC.execucao.dataExecucao;
+      currentDRC.execucao.dataExecucao = novaData;
+      const analista = currentDRC.execucao.analista || 'Operacional';
+      pushHistory(currentDRC,'validacao_custos',analista,
+        `Data de execução alterada de ${new Date(dataAnterior+'T00:00:00').toLocaleDateString('pt-BR')} para ${new Date(novaData+'T00:00:00').toLocaleDateString('pt-BR')}. Justificativa: ${just}`);
+      save();
+      toast('✅ Data de execução atualizada','#fb923c');
+      selectDRC(currentDRC.id);
+    }
+  );
+}
+
 function confirmarExecucao() {
   const data = document.getElementById('conf-data')?.value;
   const anal = document.getElementById('conf-analista')?.value;
@@ -1170,7 +1221,7 @@ function showModal(title,icon,bodyHtml,fn) {
 function closeModal() {
   document.getElementById('modal-ov').classList.remove('open'); _modalFn=null;
 }
-function runModal() { if(_modalFn)_modalFn(); closeModal(); }
+function runModal() { if(_modalFn){ const r=_modalFn(); if(r===false) return; } closeModal(); }
 
 // ══════════════════ TOAST ══════════════════
 function toast(msg,color) {
