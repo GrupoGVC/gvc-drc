@@ -782,15 +782,13 @@ input.manual-input.manual-filled {
 
       <!-- Autor -->
       <div style="margin-top:14px;">
-        <label style="font-family:var(--font-mono);font-size:0.6rem;font-weight:700;letter-spacing:0.08em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:6px;">⚠ Registrado por <span style="font-size:0.55rem;color:var(--text-dim);text-transform:none;font-weight:400;">(obrigatório)</span></label>
-        <select id="status-autor"
+        <label style="font-family:var(--font-mono);font-size:0.6rem;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px;">👤 Registrado por</label>
+        <div id="status-autor-display"
           style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
                  color:var(--text);font-family:var(--font);font-size:0.85rem;padding:9px 12px;
-                 outline:none;cursor:pointer;transition:border-color 0.15s;appearance:none;
-                 background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-                 background-repeat:no-repeat;background-position:right 12px center;"
-          onfocus="this.style.borderColor='var(--retec)'" onblur="this.style.borderColor='var(--border2)'">
-        </select>
+                 opacity:0.8;cursor:default;">
+        </div>
+        <input type="hidden" id="status-autor" value="">
       </div>
     </div>
     <div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;">
@@ -833,7 +831,7 @@ input.manual-input.manual-filled {
     </div>
 
     <!-- Tabs -->
-    <div style="display:grid; grid-template-columns:repeat(9,1fr); border-bottom:1px solid var(--border); flex-shrink:0;">
+    <div style="display:grid; grid-template-columns:repeat(8,1fr); border-bottom:1px solid var(--border); flex-shrink:0;">
       <button id="tab-empresas" onclick="showTab('empresas')" style="
         padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid var(--retec);
         color:var(--retec); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
@@ -864,12 +862,7 @@ input.manual-input.manual-filled {
         display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
         <span style="font-size:1.1rem;">💬</span>Justificativas
       </button>
-      <button id="tab-usuarios" onclick="showTab('usuarios')" style="
-        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
-        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
-        <span style="font-size:1.1rem;">👥</span>Usuários
-      </button>
+
       <button id="tab-veiculos" onclick="showTab('veiculos')" style="
         padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
         color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
@@ -1321,7 +1314,7 @@ function openStatusModal() {
   pendingJust   = '';
   const overlay = document.getElementById('status-modal-overlay');
   document.getElementById('status-modal-num').textContent = currentDRC.numero + ' · ' + (currentDRC.cliente || 'sem cliente');
-  document.getElementById('status-autor').value = currentDRC.consultor || '';
+  document.getElementById('status-autor') && (document.getElementById('status-autor').value = '');
   const _ta = document.getElementById('just-textarea');
   if (_ta) { _ta.value = ''; _ta.style.display = 'none'; }
   renderStatusOpts();
@@ -1389,27 +1382,13 @@ function renderJustPresets() {
 }
 
 function renderAutorSelect() {
-  const sel = document.getElementById('status-autor');
-  if (!sel) return;
-  const users = cadastros.usuarios || [];
-  sel.innerHTML = '<option value="">— Selecione o usuário —</option>'
-    + users.map(u => '<option value="' + u.replace(/"/g, '&quot;') + '">' + u + '</option>').join('');
-  // Auto-preenche com o usuário logado
   try {
     const loggedUser = JSON.parse(localStorage.getItem('gvc_user') || '{}');
-    if (loggedUser.nome) {
-      // Tenta encontrar na lista primeiro
-      const match = users.find(u => u === loggedUser.nome || u.toLowerCase().includes(loggedUser.nome.split(' ')[0].toLowerCase()));
-      sel.value = match || '';
-      // Se não encontrar na lista, adiciona dinamicamente
-      if (!sel.value && loggedUser.nome) {
-        const opt = document.createElement('option');
-        opt.value = loggedUser.nome;
-        opt.textContent = loggedUser.nome;
-        sel.appendChild(opt);
-        sel.value = loggedUser.nome;
-      }
-    }
+    const nome = loggedUser.nome || '—';
+    const display = document.getElementById('status-autor-display');
+    const input   = document.getElementById('status-autor');
+    if (display) display.textContent = nome;
+    if (input)   input.value = nome;
   } catch(e) {}
 }
 
@@ -1444,10 +1423,12 @@ function confirmStatusChange() {
   }
   const autor = document.getElementById('status-autor').value.trim();
   if (!autor) {
-    const sel = document.getElementById('status-autor');
-    if (sel) { sel.style.borderColor = 'var(--red)'; setTimeout(()=>sel.style.borderColor='var(--border2)', 1200); sel.focus(); }
-    toast('⚠️ Selecione o usuário responsável', '#e84393');
-    return;
+    // Fallback: get from localStorage if hidden input was empty
+    try {
+      const u = JSON.parse(localStorage.getItem('gvc_user') || '{}');
+      if (u.nome) { autor = u.nome; }
+      else { toast('⚠️ Usuário não identificado', '#e84393'); return; }
+    } catch { toast('⚠️ Usuário não identificado', '#e84393'); return; }
   }
   const entry = {
     status: pendingStatus,
@@ -2155,8 +2136,7 @@ async function load() {
       if (!cadastros.categorias)     cadastros.categorias     = [];
       if (!cadastros.justificativas) cadastros.justificativas = [];
       if (!cadastros.empresasLogos)  cadastros.empresasLogos  = {};
-      if (!cadastros.usuarios)       cadastros.usuarios       = [];
-      if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
+            if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
       if (!cadastros.receptores) cadastros.receptores = null;
       if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 };
     }
@@ -4514,7 +4494,7 @@ function closeCadastros() {
 function showTab(tab) {
   currentTab = tab;
   // Tab styles
-  ['empresas','unidades','consultores','categorias','justificativas','usuarios','veiculos','receptores','tabela-mo'].forEach(t => {
+  ['empresas','unidades','consultores','categorias','justificativas','veiculos','receptores','tabela-mo'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
     if (!btn) return;
     if (t === tab) {
