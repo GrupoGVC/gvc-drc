@@ -2627,11 +2627,11 @@ function renderForm() {
       '<span class="section-icon">📋</span>' +
       '<span class="section-title">Identificação do DRC</span>' +
       '<span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--retec);margin-right:12px;">' + drc.numero + '</span>' +
-      '<button class="status-change-btn" onclick="openStatusModal()">' +
+      '<button class="status-change-btn"' + (locked ? ' style="cursor:default;pointer-events:none;"' : ' onclick="openStatusModal()"') + '>' +
         '<span class="drc-status status-' + drc.status + '">' + statusMeta.icon + ' ' + statusMeta.label + '</span>' +
-        '<span style="font-size:0.65rem;opacity:0.6;"> ▼ Alterar</span>' +
+        (locked ? '<span style="font-size:0.6rem;opacity:0.45;margin-left:6px;">🔒 Op.</span>' : '<span style="font-size:0.65rem;opacity:0.6;"> ▼ Alterar</span>') +
       '</button>' +
-      '<button onclick="deleteDRC(\'' + drc.id + '\')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.85rem;margin-left:8px;padding:4px 8px;border-radius:4px;transition:color 0.15s;" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--text-dim)\'">🗑 Excluir</button>' +
+      (locked ? '' : '<button onclick="deleteDRC(\'' + drc.id + '\')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.85rem;margin-left:8px;padding:4px 8px;border-radius:4px;transition:color 0.15s;" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--text-dim)\'">🗑 Excluir</button>') +
     '</div>' +
     '<div class="section-body">' +
       '<div class="form-grid cols3">' +
@@ -2798,8 +2798,7 @@ function renderForm() {
     if (saveBtn) { saveBtn.disabled = true; saveBtn.style.opacity = '0.35'; saveBtn.style.cursor = 'not-allowed'; }
     // Desabilita todos os campos do form
     form.querySelectorAll('input, select, textarea, button').forEach(el => {
-      // Mantém botões de PDF e status visíveis mas desabilita edição
-      if (el.classList.contains('status-change-btn')) return; // mantém alterar status
+      // Mantém botões de PDF visíveis mas desabilita edição
       if (el.onclick && el.onclick.toString().includes('exportPDF')) return;
       el.disabled = true;
       if (el.tagName === 'BUTTON') el.style.opacity = '0.35';
