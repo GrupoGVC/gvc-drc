@@ -786,6 +786,74 @@ function renderDetail() {
 }
 
 // ── Phase 1: Aguardando ──
+
+function renderFotosOperacional(drc) {
+  const parts = [];
+
+  // Foto do Lead
+  if (drc.leadFoto) {
+    parts.push(`
+      <div style="margin-bottom:14px;">
+        <div style="font-family:var(--mono);font-size:.6rem;color:var(--text-muted);text-transform:uppercase;
+             letter-spacing:.08em;margin-bottom:8px;">📸 Foto do Lead</div>
+        <img src="${drc.leadFoto}" alt="Foto do Lead"
+          style="max-width:100%;max-height:220px;object-fit:cover;border-radius:10px;
+                 border:1px solid var(--border2);cursor:pointer;display:block;"
+          onclick="openLightboxOp(this.src,'Foto do Lead')">
+      </div>`);
+  }
+
+  // Fotos das coletas
+  const fotos_coletas = [];
+  (drc.coletas||[]).forEach((col, idx) => {
+    if ((col.fotos||[]).length) {
+      fotos_coletas.push({ label: `Coleta ${idx+1} — ${col.residuo||''}`, fotos: col.fotos });
+    }
+  });
+
+  if (fotos_coletas.length) {
+    fotos_coletas.forEach(group => {
+      parts.push(`
+        <div style="margin-bottom:14px;">
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--text-muted);text-transform:uppercase;
+               letter-spacing:.08em;margin-bottom:8px;">📷 ${group.label}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            ${group.fotos.map((f,i)=>`
+              <div style="position:relative;">
+                <img src="${f.dataUrl}" alt="Foto ${i+1}"
+                  style="width:110px;height:80px;object-fit:cover;border-radius:8px;
+                         border:1px solid var(--border2);cursor:pointer;"
+                  onclick="openLightboxOp(this.src,'${group.label} — Foto ${i+1}')">
+                ${f.legenda?`<div style="font-size:.58rem;color:var(--text-muted);margin-top:2px;text-align:center;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.legenda}</div>`:''}
+              </div>`).join('')}
+          </div>
+        </div>`);
+    });
+  }
+
+  if (!parts.length) return '';
+  return `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+         padding:14px 16px;margin-top:14px;">
+      <div style="font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--text);
+           text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">
+        🖼 Registros Fotográficos
+      </div>
+      ${parts.join('')}
+    </div>`;
+}
+
+function openLightboxOp(src, title) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;cursor:zoom-out;';
+  overlay.onclick = () => overlay.remove();
+  overlay.innerHTML = `
+    <div style="font-family:var(--mono);font-size:.65rem;color:#aaa;letter-spacing:.06em;">${title}</div>
+    <img src="${src}" style="max-width:90vw;max-height:82vh;object-fit:contain;border-radius:8px;">
+    <div style="font-size:.65rem;color:#666;">Clique para fechar</div>`;
+  document.body.appendChild(overlay);
+}
+
 function renderPhaseAg(drc) {
   const users = (cadastros.usuarios||[]).map(u=>`<option value="${u}">${u}</option>`).join('');
   // Auto-fill analista após renderização
@@ -845,6 +913,7 @@ function renderPhaseAg(drc) {
         ${colSummary||'<div style="color:var(--text-muted);font-size:.78rem;">Nenhuma coleta cadastrada.</div>'}
         ${destTable}
         ${drc.obs?`<div class="sec-div">Observações do DRC</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:.78rem;color:var(--text-muted);">${drc.obs}</div>`:''}
+        ${renderFotosOperacional(drc)}
 
         <div class="exec-box" style="margin-top:16px;">
           <div class="exec-box-title">▶ Confirmar Data de Execução</div>
@@ -878,6 +947,8 @@ function renderPhaseAg(drc) {
 // ── Phase 2: Validação ──
 function renderPhaseVal(drc) {
   if(!drc.execucao) drc.execucao={};
+
+  const fotosHtml = renderFotosOperacional(drc);
 
   const execInfo = drc.execucao.dataExecucao ? `
     <div class="exec-info-pill" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -1006,6 +1077,7 @@ function renderPhaseVal(drc) {
       </div>
       <div class="section-body">
         ${execInfo}
+        ${fotosHtml}
         <div class="sec-div">Coletas — Validação</div>
         ${coletaForms||'<div style="color:var(--text-muted);font-size:.78rem;">Nenhuma coleta.</div>'}
         ${destSection}
