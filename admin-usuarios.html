@@ -330,7 +330,10 @@ let _toastTmr;
 (async () => {
   const u = await requireAuth(['gestor']);
   if (!u) return;
-  document.getElementById('huser').textContent = '👤 ' + u.nome;
+  const ud = document.getElementById('user-display');
+  const rd = document.getElementById('role-display');
+  if (ud) ud.textContent = u.nome;
+  if (rd) rd.textContent = u.role;
   await loadUsers();
   renderPermMatrix();
 })();
