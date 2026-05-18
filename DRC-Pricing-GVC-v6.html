@@ -734,6 +734,7 @@ input.manual-input.manual-filled {
   <span class="hbadge">DRC · PRECIFICAÇÃO</span>
   <div class="hactions">
     <button class="hbtn" onclick="saveDRC()" id="btn-save">💾 Salvar</button>
+    <button class="hbtn" onclick="duplicateDRC()" id="btn-duplicate" style="display:none;" title="Duplicar DRC atual">⧉ Duplicar</button>
     <button class="hbtn" onclick="exportPDF()" id="btn-pdf">🖨 PDF Comercial</button>
     <button class="hbtn primary" onclick="exportPDFOperacao()" id="btn-pdf-op">📋 PDF Operação</button>
     <button class="hbtn" onclick="openCadastros()" title="Gerenciar cadastros">⚙ Cadastros</button>
@@ -2814,6 +2815,8 @@ function renderForm() {
   } else {
     const saveBtn = document.getElementById('btn-save');
     if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = '1'; saveBtn.style.cursor = ''; }
+    const dupBtn = document.getElementById('btn-duplicate');
+    if (dupBtn) dupBtn.style.display = 'flex';
   }
 }
 function renderResults(r) {
@@ -3801,7 +3804,6 @@ async function newDRC() {
     const res = await GvcDRC.nextNumero();
     numero = res.numero;
   } catch(e) {
-    // Fallback se API falhar
     const ano = new Date().getFullYear();
     drcCounter++;
     numero = `DRC-${ano}-${String(drcCounter).padStart(4,'0')}`;
@@ -3812,6 +3814,39 @@ async function newDRC() {
   if(currentDRC) GvcDRC.save(currentDRC).catch(()=>{});
   selectDRC(drc.id);
   toast('📋 Novo DRC criado: ' + drc.numero, '#00c896');
+}
+
+async function duplicateDRC() {
+  if (!currentDRC) { toast('⚠️ Nenhum DRC aberto', '#f5a623'); return; }
+  if (!confirm(`Duplicar o DRC "${currentDRC.numero} — ${currentDRC.cliente || 'sem cliente'}"?\n\nO novo DRC será criado como Rascunho com todos os dados copiados.`)) return;
+
+  let numero;
+  try {
+    const res = await GvcDRC.nextNumero();
+    numero = res.numero;
+  } catch(e) {
+    const ano = new Date().getFullYear();
+    drcCounter++;
+    numero = `DRC-${ano}-${String(drcCounter).padStart(4,'0')}`;
+  }
+
+  // Deep copy do DRC atual
+  const copia = JSON.parse(JSON.stringify(currentDRC));
+
+  // Gera novo ID e número, reseta status e histórico
+  copia.id        = 'drc-' + Date.now() + '-' + Math.random().toString(36).slice(2,7);
+  copia.numero    = numero;
+  copia.status    = 'rascunho';
+  copia.createdAt = new Date().toISOString();
+  copia.statusHistorico = [{ status: 'rascunho', data: new Date().toISOString(), autor: '', justificativa: 'Duplicado de ' + currentDRC.numero }];
+
+  // Remove dados de execução da operação
+  delete copia.execucao;
+
+  drcs.push(copia);
+  await GvcDRC.save(copia);
+  selectDRC(copia.id);
+  toast('⧉ DRC duplicado: ' + numero, '#3b9eff');
 }
 
 function saveDRC() {
