@@ -1310,6 +1310,10 @@ function renderTimeline(drc) {
 
 function openStatusModal() {
   if (!currentDRC) return;
+  if (isLocked(currentDRC)) {
+    toast('🔒 Status bloqueado — DRC em execução operacional', '#a78bfa');
+    return;
+  }
   pendingStatus = currentDRC.status;
   pendingJust   = '';
   const overlay = document.getElementById('status-modal-overlay');
