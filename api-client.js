@@ -115,6 +115,9 @@ const GvcUsuarios = {
   async changeSenha(senha_atual, senha_nova) {
     return await _req('change_senha', 'POST', { senha_atual, senha_nova });
   },
+  async listConsultores() {
+    return await _req('list_consultores', 'GET');
+  },
 };
 
 // ── Guard de autenticação ────────────────────────────

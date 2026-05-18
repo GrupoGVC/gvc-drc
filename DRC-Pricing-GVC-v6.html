@@ -832,7 +832,7 @@ input.manual-input.manual-filled {
     </div>
 
     <!-- Tabs -->
-    <div style="display:grid; grid-template-columns:repeat(8,1fr); border-bottom:1px solid var(--border); flex-shrink:0;">
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--border); flex-shrink:0;">
       <button id="tab-empresas" onclick="showTab('empresas')" style="
         padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid var(--retec);
         color:var(--retec); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
@@ -844,12 +844,6 @@ input.manual-input.manual-filled {
         color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
         display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
         <span style="font-size:1.1rem;">🏭</span>Unidades
-      </button>
-      <button id="tab-consultores" onclick="showTab('consultores')" style="
-        padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
-        color:var(--text-muted); font-family:var(--font); font-size:0.75rem; font-weight:600; cursor:pointer;
-        display:flex; flex-direction:column; align-items:center; gap:3px; line-height:1.1;">
-        <span style="font-size:1.1rem;">👤</span>Consultores
       </button>
       <button id="tab-categorias" onclick="showTab('categorias')" style="
         padding:10px 6px 8px; background:none; border:none; border-bottom:2px solid transparent;
@@ -1033,11 +1027,11 @@ const CADASTROS_KEY  = 'gvc_cadastros_v1';
 let drcs = [];
 let currentDRC = null;
 let drcCounter = 0;
+let consultoresUsers = []; // Alimentado pelo cadastro de usuários
 let cadastros = {
   empresas:      ['GVC Ambiental', 'GVC Logística', 'Retec Simões Filho', 'Retec Oeste', 'Retec Juazeiro', 'CVR Bom Jesus da Lapa', 'CVR Alto Sertão', 'CVR Oeste', 'Eve Ambiental'],
   empresasLogos: {},
   unidades:      ['CIA Sul — Simões Filho', 'Unidade Salvador', 'Unidade Feira de Santana'],
-  consultores:   ['Lucianne', 'Consultor 2', 'Consultor 3'],
   categorias:    ['Coleta e Transporte', 'Tratamento / Destinação', 'Locação de Equipamentos', 'Consultoria / Laudos', 'Operações Especiais'],
   tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 },
   justificativas: [
@@ -2146,6 +2140,10 @@ async function load() {
       if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 };
     }
   } catch(e) { console.error('load cadastros error:', e); }
+  // Carrega consultores a partir dos usuários cadastrados
+  try {
+    consultoresUsers = await GvcUsuarios.listConsultores();
+  } catch(e) { console.warn('Erro ao carregar consultores:', e); }
 }
 
 async function save() {
@@ -2654,7 +2652,7 @@ function renderForm() {
         '</div>' +
         '<div class="field"><label>Consultor</label>' +
           '<select onchange="updateField(\'consultor\',this.value)">' +
-            '<option value="">Selecione...</option>' + makeOptions(cadastros.consultores, drc.consultor) +
+            '<option value="">Selecione...</option>' + makeOptions(consultoresUsers, drc.consultor) +
           '</select>' +
         '</div>' +
         '<div class="field"><label>Data de Criação</label><input type="date" value="' + (drc.data||'') + '" readonly style="opacity:0.6;cursor:default;" title="Definida automaticamente no momento da criação"></div>' +
@@ -4599,7 +4597,7 @@ function closeCadastros() {
 function showTab(tab) {
   currentTab = tab;
   // Tab styles
-  ['empresas','unidades','consultores','categorias','justificativas','veiculos','receptores','tabela-mo'].forEach(t => {
+  ['empresas','unidades','categorias','justificativas','veiculos','receptores','tabela-mo'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
     if (!btn) return;
     if (t === tab) {
@@ -4629,8 +4627,7 @@ function showTab(tab) {
   document.getElementById('cadastro-new-input').placeholder =
     tab === 'empresas'       ? 'Ex: GVC Ambiental...' :
     tab === 'unidades'       ? 'Ex: CIA Sul — Simões Filho...' :
-    tab === 'consultores'    ? 'Ex: João Silva...' :
-    tab === 'categorias'     ? 'Ex: Gestão de Resíduos Industriais...' :
+        tab === 'categorias'     ? 'Ex: Gestão de Resíduos Industriais...' :
     tab === 'veiculos'       ? 'Ex: Truck, Carreta, Basculante...' :
     'Ex: Preço acima do mercado...';
   document.getElementById('cadastro-new-input').focus();
@@ -4644,7 +4641,7 @@ function renderCadastroList() {
     return;
   }
   const isEmpresa = currentTab === 'empresas';
-  const icon = isEmpresa ? '🏢' : currentTab === 'unidades' ? '🏭' : currentTab === 'consultores' ? '👤' : currentTab === 'categorias' ? '📁' : currentTab === 'usuarios' ? '👥' : currentTab === 'veiculos' ? '🚛' : '💬';
+  const icon = isEmpresa ? '🏢' : currentTab === 'unidades' ? '🏭' : currentTab === 'categorias' ? '📁' : currentTab === 'usuarios' ? '👥' : currentTab === 'veiculos' ? '🚛' : '💬';
   el.innerHTML = items.map(function(item, i) {
     const logo = isEmpresa ? (cadastros.empresasLogos[item] || '') : '';
     let logoHtml = '';

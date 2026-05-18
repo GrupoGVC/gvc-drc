@@ -145,11 +145,7 @@ elseif($action==='save_drc' && $method==='POST'){
     $stmt->execute([$id,$drc['numero']??null,$drc['cliente']??null,$drc['empresa']??null,$drc['lead']??null,$drc['consultor']??null,$drc['data']??null,$drc['munUF']??null,$drc['cluster']??null,$drc['unidadeAtendimento']??null,$status,$json]);
     if(!empty($drc['statusHistorico'])){
         $last=end($drc['statusHistorico']);
-        $dataHora = $last['data'] ?? date('Y-m-d H:i:s');
-        if (strpos($dataHora, 'T') !== false) {
-            $dataHora = date('Y-m-d H:i:s', strtotime($dataHora));
-        }
-        db()->prepare('INSERT INTO drcs_status_historico (drc_id,status,data_hora,autor,justificativa) VALUES (?,?,?,?,?)')->execute([$id,$last['status']??$status,$dataHora,$last['autor']??'',$last['justificativa']??'']);
+        db()->prepare('INSERT INTO drcs_status_historico (drc_id,status,data_hora,autor,justificativa) VALUES (?,?,?,?,?)')->execute([$id,$last['status']??$status,$last['data']??date('Y-m-d H:i:s'),$last['autor']??'',$last['justificativa']??'']);
     }
     ok(['id'=>$id]);
 }
@@ -175,6 +171,11 @@ elseif($action==='save_cadastros' && $method==='POST'){
 elseif($action==='list_usuarios' && $method==='GET'){
     require_auth(['gestor']);
     ok(db()->query('SELECT id,nome,email,role,unidade,ativo,created_at FROM usuarios ORDER BY nome')->fetchAll());
+}
+elseif($action==='list_consultores' && $method==='GET'){
+    require_auth(); // qualquer usuário autenticado
+    $rows=db()->query("SELECT nome FROM usuarios WHERE ativo=1 AND role IN ('consultor','gestor') ORDER BY nome")->fetchAll();
+    ok(array_column($rows,'nome'));
 }
 elseif($action==='create_usuario' && $method==='POST'){
     require_auth(['gestor']); $b=body();
