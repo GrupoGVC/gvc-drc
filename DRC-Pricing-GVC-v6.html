@@ -2171,6 +2171,8 @@ function createDRC(numero) {
     // Cabeçalho
     empresa: '', cliente: '', lead: '', consultor: '', data: new Date().toISOString().slice(0,10),
     munUF: '', cluster: '', unidadeAtendimento: '', categoriaServico: ['',''], obs: '', obsFinais: '', leadFoto: '',
+    tipoCliente: 'spot',
+    contrato: { modalidade: 'transporte_fixo', numero: '', vigencia: '', frequencia: 'mensal', obs: '', valorTransporte: '', valorGlobal: '', residuosContratados: [] },
     // Coletas
     coletas: [newColeta(1)],
     // Destinação
@@ -2490,6 +2492,7 @@ function renderList() {
     el.innerHTML = filtered.slice().reverse().map(d => {
       const r = calcDRC(d);
       const active = currentDRC?.id === d.id ? 'active' : '';
+      const tipoBadge = d.tipoCliente === 'recorrente' ? '<span style="font-family:var(--font-mono);font-size:.5rem;padding:1px 6px;border-radius:10px;background:rgba(59,158,255,.15);color:var(--blue);border:1px solid rgba(59,158,255,.3);font-weight:700;">🔄 REC</span>' : '<span style="font-family:var(--font-mono);font-size:.5rem;padding:1px 6px;border-radius:10px;background:rgba(245,166,35,.12);color:var(--orange);border:1px solid rgba(245,166,35,.3);font-weight:700;">⚡ SPOT</span>';
       return `<div class="drc-item ${active}" onclick="selectDRC('${d.id}')">
         <div class="drc-num">${d.numero}</div>
         <div class="drc-name">${d.cliente || '(sem cliente)'}</div>
@@ -2684,6 +2687,27 @@ function renderForm() {
           '</div>' +
         '</div>' +
       '</div>' +
+      // ── TIPO DE CLIENTE ──────────────────────────────────
+      '<div style="margin-top:14px;">' +
+        '<div class="form-section-mini">' +
+          '<div class="section-header" style="margin-bottom:10px;">' +
+            '<span class="section-icon">🏷</span>' +
+            '<span class="section-title">Tipo de Cliente</span>' +
+          '</div>' +
+          '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">' +
+            '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 16px;border-radius:8px;border:2px solid ' + (drc.tipoCliente==='spot'?'var(--retec)':'var(--border2)') + ';background:' + (drc.tipoCliente==='spot'?'var(--retec-dim)':'var(--surface2)') + ';transition:all .15s;font-weight:600;font-size:.85rem;">' +
+              '<input type="radio" name="tipo-cliente" value="spot" ' + ((!drc.tipoCliente||drc.tipoCliente==='spot')?'checked':'') + ' onchange="updateTipoCliente(\'spot\')" style="accent-color:var(--retec);">' +
+              '⚡ Spot' +
+            '</label>' +
+            '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 16px;border-radius:8px;border:2px solid ' + (drc.tipoCliente==='recorrente'?'var(--blue)':'var(--border2)') + ';background:' + (drc.tipoCliente==='recorrente'?'rgba(59,158,255,.1)':'var(--surface2)') + ';transition:all .15s;font-weight:600;font-size:.85rem;">' +
+              '<input type="radio" name="tipo-cliente" value="recorrente" ' + (drc.tipoCliente==='recorrente'?'checked':'') + ' onchange="updateTipoCliente(\'recorrente\')" style="accent-color:var(--blue);">' +
+              '🔄 Recorrente' +
+            '</label>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      // ── BLOCO CONTRATO (só se Recorrente) ─────────────────
+      (drc.tipoCliente==='recorrente' ? renderContratoBlock(drc) : '') +
       '<div class="form-grid full" style="margin-top:12px;">' +
         '<div class="field"><label>Observações / Escopo</label><textarea oninput="updateField(\'obs\',this.value)" placeholder="Detalhes do escopo, condições especiais...">' + (drc.obs||'') + '</textarea></div>' +
       '</div>' +
@@ -2817,9 +2841,238 @@ function renderForm() {
     if (dupBtn) dupBtn.style.display = 'flex';
   }
 }
+
+function renderContratoBlock(drc) {
+  const ct = drc.contrato || {};
+  const isTipoA = (ct.modalidade || 'transporte_fixo') === 'transporte_fixo';
+  const fmt = v => v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—';
+
+  const residuosRows = (ct.residuosContratados || []).map((r, i) => `
+    <tr>
+      <td style="padding:6px 8px;"><input type="text" value="${r.residuo||''}" placeholder="Ex: Óleo contaminado"
+        oninput="updateResiduoContratado(${i},'residuo',this.value)"
+        style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font);font-size:.82rem;padding:5px 8px;outline:none;"></td>
+      <td style="padding:6px 8px;"><select onchange="updateResiduoContratado(${i},'unidade',this.value)"
+        style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font);font-size:.82rem;padding:5px 8px;outline:none;">
+        ${['kg','ton','L','m³','un'].map(u=>`<option value="${u}" ${r.unidade===u?'selected':''}>${u}</option>`).join('')}
+      </select></td>
+      <td style="padding:6px 8px;"><input type="number" value="${r.valorUnit||''}" placeholder="0,00" step="0.01" min="0"
+        oninput="updateResiduoContratado(${i},'valorUnit',this.value)"
+        style="width:90px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-mono);font-size:.82rem;padding:5px 8px;outline:none;text-align:right;"></td>
+      <td style="padding:6px 4px;text-align:center;"><button onclick="removeResiduoContratado(${i})"
+        style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.85rem;padding:4px;border-radius:4px;transition:color .15s;"
+        onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-dim)'">✕</button></td>
+    </tr>`).join('');
+
+  const freqOpts = [['mensal','Mensal'],['quinzenal','Quinzenal'],['semanal','Semanal'],['sob_demanda','Sob demanda']];
+
+  return `
+    <div style="margin-top:14px;background:rgba(59,158,255,.05);border:1.5px solid rgba(59,158,255,.25);border-radius:12px;padding:16px 18px;">
+      <div style="font-family:var(--font-mono);font-size:.65rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">
+        📄 Dados do Contrato
+      </div>
+
+      <!-- Linha 1: Nº / Vigência / Frequência -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div class="field" style="margin:0;">
+          <label>Nº / Referência do Contrato</label>
+          <input type="text" value="${ct.numero||''}" placeholder="Ex: CTR-2024-001"
+            oninput="updateContrato('numero',this.value)"
+            style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:.84rem;padding:8px 10px;outline:none;width:100%;transition:border-color .15s;"
+            onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
+        </div>
+        <div class="field" style="margin:0;">
+          <label>Vigência (até)</label>
+          <input type="date" value="${ct.vigencia||''}" oninput="updateContrato('vigencia',this.value)"
+            style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:.84rem;padding:8px 10px;outline:none;width:100%;transition:border-color .15s;"
+            onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
+        </div>
+        <div class="field" style="margin:0;">
+          <label>Frequência</label>
+          <select onchange="updateContrato('frequencia',this.value)"
+            style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:.84rem;padding:8px 10px;outline:none;width:100%;appearance:none;">
+            ${freqOpts.map(([v,l])=>`<option value="${v}" ${(ct.frequencia||'mensal')===v?'selected':''}>${l}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
+      <!-- Modalidade -->
+      <div style="margin-bottom:12px;">
+        <label style="font-family:var(--font-mono);font-size:.6rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:8px;">Modalidade de Fixação</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;padding:7px 14px;border-radius:8px;border:2px solid ${isTipoA?'var(--blue)':'var(--border2)'};background:${isTipoA?'rgba(59,158,255,.1)':'var(--surface2)'};font-size:.82rem;font-weight:600;transition:all .15s;">
+            <input type="radio" name="ct-modalidade" value="transporte_fixo" ${isTipoA?'checked':''} onchange="updateContrato('modalidade','transporte_fixo');renderForm();" style="accent-color:var(--blue);">
+            🚛 Transporte fixo + Destinação variável
+          </label>
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;padding:7px 14px;border-radius:8px;border:2px solid ${!isTipoA?'var(--blue)':'var(--border2)'};background:${!isTipoA?'rgba(59,158,255,.1)':'var(--surface2)'};font-size:.82rem;font-weight:600;transition:all .15s;">
+            <input type="radio" name="ct-modalidade" value="global" ${!isTipoA?'checked':''} onchange="updateContrato('modalidade','global');renderForm();" style="accent-color:var(--blue);">
+            💼 Valor global fixo
+          </label>
+        </div>
+      </div>
+
+      <!-- Campos por modalidade -->
+      ${isTipoA ? `
+        <div style="margin-bottom:12px;">
+          <label style="font-family:var(--font-mono);font-size:.6rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px;">Valor Fixo do Transporte (R$)</label>
+          <input type="number" value="${ct.valorTransporte||''}" placeholder="0,00" step="0.01" min="0"
+            oninput="updateContrato('valorTransporte',this.value)"
+            style="width:200px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font-mono);font-size:.9rem;padding:8px 12px;outline:none;text-align:right;transition:border-color .15s;"
+            onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <label style="font-family:var(--font-mono);font-size:.6rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase;">Resíduos Contratados (Valor Unitário)</label>
+            <button onclick="addResiduoContratado()"
+              style="font-family:var(--font-mono);font-size:.62rem;padding:4px 10px;border-radius:6px;border:1px solid rgba(59,158,255,.4);background:rgba(59,158,255,.08);color:var(--blue);cursor:pointer;">
+              + Adicionar resíduo
+            </button>
+          </div>
+          ${(ct.residuosContratados||[]).length ? `
+          <table style="width:100%;border-collapse:collapse;background:var(--surface2);border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+            <thead>
+              <tr style="background:var(--surface);font-family:var(--font-mono);font-size:.58rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">
+                <th style="padding:7px 8px;text-align:left;border-bottom:1px solid var(--border);">Resíduo / Tratamento</th>
+                <th style="padding:7px 8px;text-align:left;border-bottom:1px solid var(--border);">Unidade</th>
+                <th style="padding:7px 8px;text-align:right;border-bottom:1px solid var(--border);">R$/unit contratado</th>
+                <th style="padding:7px 8px;border-bottom:1px solid var(--border);"></th>
+              </tr>
+            </thead>
+            <tbody>${residuosRows}</tbody>
+          </table>` : `<div style="color:var(--text-muted);font-size:.78rem;padding:10px 0;">Nenhum resíduo cadastrado. Clique em "+ Adicionar resíduo" para começar.</div>`}
+        </div>
+      ` : `
+        <div>
+          <label style="font-family:var(--font-mono);font-size:.6rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:6px;">Valor Global Contratado (R$)</label>
+          <input type="number" value="${ct.valorGlobal||''}" placeholder="0,00" step="0.01" min="0"
+            oninput="updateContrato('valorGlobal',this.value)"
+            style="width:200px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font-mono);font-size:.9rem;padding:8px 12px;outline:none;text-align:right;transition:border-color .15s;"
+            onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
+        </div>
+      `}
+
+      <!-- Obs do contrato -->
+      <div style="margin-top:12px;" class="field">
+        <label>Observações do Contrato</label>
+        <textarea rows="2" placeholder="Condições especiais, cláusulas relevantes..."
+          oninput="updateContrato('obs',this.value)"
+          style="resize:vertical;">${ct.obs||''}</textarea>
+      </div>
+    </div>`;
+}
+
+function updateTipoCliente(tipo) {
+  if (!currentDRC) return;
+  currentDRC.tipoCliente = tipo;
+  if (!currentDRC.contrato) currentDRC.contrato = { modalidade:'transporte_fixo', numero:'', vigencia:'', frequencia:'mensal', obs:'', valorTransporte:'', valorGlobal:'', residuosContratados:[] };
+  autoSave();
+  renderForm();
+}
+
+function updateContrato(field, value) {
+  if (!currentDRC) return;
+  if (!currentDRC.contrato) currentDRC.contrato = {};
+  currentDRC.contrato[field] = value;
+  autoSave();
+}
+
+function addResiduoContratado() {
+  if (!currentDRC?.contrato) return;
+  if (!currentDRC.contrato.residuosContratados) currentDRC.contrato.residuosContratados = [];
+  currentDRC.contrato.residuosContratados.push({ residuo:'', unidade:'kg', valorUnit:'' });
+  autoSave();
+  renderForm();
+}
+
+function removeResiduoContratado(i) {
+  if (!currentDRC?.contrato?.residuosContratados) return;
+  currentDRC.contrato.residuosContratados.splice(i, 1);
+  autoSave();
+  renderForm();
+}
+
+function updateResiduoContratado(i, field, value) {
+  if (!currentDRC?.contrato?.residuosContratados) return;
+  currentDRC.contrato.residuosContratados[i][field] = value;
+  autoSave();
+}
+
 function renderResults(r) {
   var mPct   = (r.margem * 100).toFixed(1);
   var mColor = r.margem > 0.20 ? '#00c896' : r.margem > 0.10 ? '#f5a623' : '#e84393';
+
+  // ── Bloco comparativo contratual (só Recorrente) ──
+  var contratoHtml = '';
+  if (currentDRC && currentDRC.tipoCliente === 'recorrente') {
+    var ct = currentDRC.contrato || {};
+    var isTipoA = (ct.modalidade || 'transporte_fixo') === 'transporte_fixo';
+    var fmtR = function(v){ return v ? 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'; };
+    var freqLabel = {mensal:'Mensal',quinzenal:'Quinzenal',semanal:'Semanal',sob_demanda:'Sob demanda'};
+    var contratoReceita = 0;
+    var linhasHtml = '';
+    if (isTipoA) {
+      var vt = Number(ct.valorTransporte) || 0;
+      contratoReceita = vt;
+      var varColor = r.recTransp >= vt ? '#00c896' : '#e84393';
+      linhasHtml += '<tr>'
+        + '<td style="padding:7px 10px;color:var(--text-muted);">🚛 Transporte (fixo contratado)</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);color:var(--blue);">' + fmtR(vt) + '</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);">' + fmtR(r.recTransp) + '</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);color:' + varColor + ';">' + (vt > 0 ? (r.recTransp >= vt ? '▲ ' : '▼ ') + fmtR(Math.abs(r.recTransp - vt)) : '—') + '</td>'
+        + '</tr>';
+      (ct.residuosContratados || []).forEach(function(res) {
+        linhasHtml += '<tr>'
+          + '<td style="padding:5px 10px 5px 22px;color:var(--text-muted);font-size:.78rem;">♻ ' + (res.residuo||'Resíduo') + ' (' + fmtR(res.valorUnit) + '/' + (res.unidade||'kg') + ')</td>'
+          + '<td style="padding:5px 10px;text-align:right;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);">variável</td>'
+          + '<td colspan="2" style="padding:5px 10px;text-align:right;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);">—</td>'
+          + '</tr>';
+      });
+    } else {
+      var vg = Number(ct.valorGlobal) || 0;
+      contratoReceita = vg;
+      var totalDRC = r.recTotal;
+      var varColorG = totalDRC >= vg ? '#00c896' : '#e84393';
+      linhasHtml += '<tr>'
+        + '<td style="padding:7px 10px;color:var(--text-muted);">💼 Valor global (contratado)</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);color:var(--blue);">' + fmtR(vg) + '</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);">' + fmtR(totalDRC) + '</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);color:' + varColorG + ';">' + (vg > 0 ? (totalDRC >= vg ? '▲ ' : '▼ ') + fmtR(Math.abs(totalDRC - vg)) : '—') + '</td>'
+        + '</tr>';
+    }
+    var margemCtPct = contratoReceita > 0 ? ((contratoReceita - r.despTotal) / contratoReceita * 100).toFixed(1) : null;
+    var margemDRCPct = (r.margem * 100).toFixed(1);
+    var mCtColor = margemCtPct !== null ? (Number(margemCtPct) > 20 ? '#00c896' : Number(margemCtPct) > 10 ? '#f5a623' : '#e84393') : 'var(--text-muted)';
+    var vigenciaStr = ct.vigencia ? new Date(ct.vigencia + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+    contratoHtml = '<div style="margin-top:16px;border:1.5px solid rgba(59,158,255,.3);border-radius:12px;overflow:hidden;">'
+      + '<div style="background:rgba(59,158,255,.1);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">'
+        + '<div style="font-family:var(--font-mono);font-size:.65rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;">🔄 Análise Contratual' + (ct.numero ? ' — ' + ct.numero : '') + (ct.frequencia ? ' (' + (freqLabel[ct.frequencia]||ct.frequencia) + ')' : '') + '</div>'
+        + (vigenciaStr ? '<div style="font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);">Vigência até: ' + vigenciaStr + '</div>' : '')
+      + '</div>'
+      + '<table style="width:100%;border-collapse:collapse;font-size:.82rem;">'
+        + '<thead><tr style="background:var(--surface2);font-family:var(--font-mono);font-size:.58rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">'
+          + '<th style="padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);">Item</th>'
+          + '<th style="padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);">Contratado</th>'
+          + '<th style="padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);">DRC Precificado</th>'
+          + '<th style="padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);">Variação</th>'
+        + '</tr></thead>'
+        + '<tbody>' + linhasHtml + '</tbody>'
+        + '<tfoot>'
+          + '<tr style="border-top:2px solid var(--border);background:var(--surface2);">'
+            + '<td style="padding:8px 10px;font-weight:700;">Custo Total Previsto</td>'
+            + '<td style="padding:8px 10px;text-align:right;font-family:var(--font-mono);color:var(--text-muted);">—</td>'
+            + '<td style="padding:8px 10px;text-align:right;font-family:var(--font-mono);">' + fmtR(r.despTotal) + '</td>'
+            + '<td></td>'
+          + '</tr>'
+          + '<tr style="background:rgba(59,158,255,.06);">'
+            + '<td style="padding:8px 10px;font-weight:700;">Margem Estimada</td>'
+            + '<td style="padding:8px 10px;text-align:right;font-family:var(--font-mono);font-weight:700;color:' + mCtColor + ';">' + (margemCtPct !== null ? margemCtPct + '%' : '—') + '</td>'
+            + '<td style="padding:8px 10px;text-align:right;font-family:var(--font-mono);font-weight:700;color:var(--retec);">' + margemDRCPct + '%</td>'
+            + '<td></td>'
+          + '</tr>'
+        + '</tfoot>'
+      + '</table>'
+    + '</div>';
+  }
 
   function row(label, val, opts) {
     opts = opts || {};
@@ -2892,7 +3145,8 @@ function renderResults(r) {
     + '</div>'
     + '</div>'
     + '</div>'
-    + '</div>';
+    + '</div>'
+    + contratoHtml;
 }
 
 function renderColeta(c, i) {
