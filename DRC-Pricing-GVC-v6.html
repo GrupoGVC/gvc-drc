@@ -5032,6 +5032,18 @@ function moveCadastroItem(i, dir) {
 // ═══════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════
+
+// Pré-popula imediatamente do localStorage (evita badge vazio)
+(function() {
+  try {
+    const cached = JSON.parse(localStorage.getItem('gvc_user') || '{}');
+    if (cached.nome) {
+      const un = document.getElementById('user-name'); if(un) un.textContent = cached.nome;
+      const ur = document.getElementById('user-role'); if(ur) ur.textContent = (cached.role||'').toUpperCase();
+    }
+  } catch(e) {}
+})();
+
 (async () => {
   const user = await requireAuth(['gestor', 'diretor', 'financeiro', 'consultor']);
   if (!user) return;
