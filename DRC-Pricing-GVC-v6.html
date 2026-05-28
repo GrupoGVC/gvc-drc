@@ -738,7 +738,13 @@ input.manual-input.manual-filled {
     <button class="hbtn" onclick="exportPDF()" id="btn-pdf">🖨 PDF Comercial</button>
     <button class="hbtn primary" onclick="exportPDFOperacao()" id="btn-pdf-op">📋 PDF Operação</button>
     <button class="hbtn" onclick="openCadastros()" title="Gerenciar cadastros">⚙ Cadastros</button>
-    <span id="user-display" style="font-family:monospace;font-size:.65rem;color:#5a6577;margin-left:4px;"></span>
+    <div class="user-badge">
+      <div class="user-dot"></div>
+      <div>
+        <div class="user-name" id="user-name">—</div>
+        <div class="user-role" id="user-role">—</div>
+      </div>
+    </div>
     <button class="hbtn" id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
   </div>
 </header>
@@ -4991,10 +4997,8 @@ function moveCadastroItem(i, dir) {
 (async () => {
   const user = await requireAuth(['gestor', 'diretor', 'financeiro', 'consultor']);
   if (!user) return;
-  const udisp = document.getElementById('user-display');
-  if (udisp) udisp.textContent = '👤 ' + user.nome;
-  const blogout = document.getElementById('btn-logout');
-  if (blogout) blogout.style.display = 'flex';
+  const un = document.getElementById('user-name'); if(un) un.textContent = user.nome;
+  const ur = document.getElementById('user-role'); if(ur) ur.textContent = user.role.toUpperCase();
   await load();
   renderList();
   populateFilterSelects();

@@ -65,6 +65,10 @@ header {
 .h-stat-val.orange { color:var(--orange); }
 .h-stat-val.cyan   { color:var(--cyan);   }
 .h-actions { margin-left:auto; display:flex; gap:8px; align-items:center; }
+.user-badge { display:flex; align-items:center; gap:8px; padding:5px 12px; background:var(--surface2,rgba(24,29,34,.9)); border:1px solid var(--border2,#252d36); border-radius:20px; }
+.user-dot { width:7px; height:7px; border-radius:50%; background:var(--retec,#00c896); box-shadow:0 0 6px var(--retec,#00c896); animation:pulse 2s infinite; }
+.user-name { font-family:var(--font-mono,'Space Mono',monospace); font-size:.65rem; color:var(--text,#dde4ec); }
+.user-role { font-family:var(--font-mono,'Space Mono',monospace); font-size:.55rem; color:var(--text-muted,#5a6577); text-transform:uppercase; letter-spacing:.08em; }
 .hbtn {
   padding:6px 14px; border-radius:6px; border:1px solid var(--border2);
   background:transparent; color:var(--text-muted); font-family:var(--sans);
@@ -487,9 +491,14 @@ header {
   </div>
 
   <div class="h-actions">
-    <span id="user-name" style="font-family:var(--mono);font-size:.65rem;color:var(--text-muted);"></span>
+    <div class="user-badge">
+      <div class="user-dot"></div>
+      <div>
+        <div class="user-name" id="user-name">—</div>
+        <div class="user-role" id="user-role">—</div>
+      </div>
+    </div>
     <button class="hbtn reload" onclick="refreshAll()" title="Recarregar dados do sistema">↺ Atualizar</button>
-    <button class="hbtn" onclick="GvcAuth.logout()" style="color:#f87171;border-color:rgba(248,113,113,.3);">⏻ Sair</button>
   </div>
 </header>
 
@@ -1312,8 +1321,8 @@ setInterval(()=>{ const prev=currentDRC?.id; load(); renderHeader(); renderList(
 (async () => {
   const user = await requireAuth(['operacional','gestor']);
   if (!user) return;
-  const uEl = document.getElementById('user-name');
-  if (uEl) uEl.textContent = '👤 ' + user.nome;
+  const un = document.getElementById('user-name'); if(un) un.textContent = user.nome;
+  const ur = document.getElementById('user-role'); if(ur) ur.textContent = user.role.toUpperCase();
   await load(); renderHeader(); setTab('ag');
   setInterval(async () => {
     const prev = currentDRC?.id;
