@@ -738,14 +738,14 @@ input.manual-input.manual-filled {
     <button class="hbtn" onclick="exportPDF()" id="btn-pdf">🖨 PDF Comercial</button>
     <button class="hbtn primary" onclick="exportPDFOperacao()" id="btn-pdf-op">📋 PDF Operação</button>
     <button class="hbtn" onclick="openCadastros()" title="Gerenciar cadastros">⚙ Cadastros</button>
-    <div class="user-badge">
-      <div class="user-dot"></div>
-      <div>
-        <div class="user-name" id="user-name">—</div>
-        <div class="user-role" id="user-role">—</div>
-      </div>
-    </div>
     <button class="hbtn" id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;margin-left:8px;">
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--retec);box-shadow:0 0 6px var(--retec);animation:pulse 2s infinite;flex-shrink:0;"></div>
+    <div>
+      <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--text);" id="user-name">—</div>
+      <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;" id="user-role">—</div>
+    </div>
   </div>
 </header>
 
