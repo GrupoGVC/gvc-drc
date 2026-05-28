@@ -737,14 +737,37 @@ input.manual-input.manual-filled {
     <button class="hbtn" onclick="duplicateDRC()" id="btn-duplicate" style="display:none;" title="Duplicar DRC atual">⧉ Duplicar</button>
     <button class="hbtn" onclick="exportPDF()" id="btn-pdf">🖨 PDF Comercial</button>
     <button class="hbtn primary" onclick="exportPDFOperacao()" id="btn-pdf-op">📋 PDF Operação</button>
-    <button class="hbtn" onclick="openCadastros()" title="Gerenciar cadastros">⚙ Cadastros</button>
-    <button class="hbtn" id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;margin-left:8px;">
-    <div style="width:7px;height:7px;border-radius:50%;background:var(--retec);box-shadow:0 0 6px var(--retec);animation:pulse 2s infinite;flex-shrink:0;"></div>
-    <div>
-      <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--text);" id="user-name">—</div>
-      <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;" id="user-role">—</div>
+
+    <!-- User dropdown -->
+    <div id="user-dropdown-wrap" style="position:relative;display:inline-block;">
+      <div onclick="toggleUserMenu()" style="display:flex;align-items:center;gap:8px;padding:5px 12px;
+        background:var(--surface2);border:1px solid var(--border2);border-radius:20px;margin-left:4px;
+        cursor:pointer;transition:border-color .15s;user-select:none;"
+        onmouseover="this.style.borderColor='var(--retec)'" onmouseout="this.style.borderColor='var(--border2)'">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--retec);box-shadow:0 0 6px var(--retec);animation:pulse 2s infinite;flex-shrink:0;"></div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--text);" id="user-name">—</div>
+          <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;" id="user-role">—</div>
+        </div>
+        <span style="font-size:.6rem;color:var(--text-muted);margin-left:2px;" id="user-menu-arrow">▾</span>
+      </div>
+      <!-- Dropdown menu -->
+      <div id="user-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;
+        background:var(--surface);border:1px solid var(--border2);border-radius:12px;
+        box-shadow:0 8px 24px rgba(0,0,0,.35);min-width:180px;z-index:9999;overflow:hidden;">
+        <button onclick="openCadastros();toggleUserMenu()" style="width:100%;display:flex;align-items:center;gap:10px;
+          padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);
+          color:var(--text);font-family:var(--font);font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s;"
+          onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          ⚙ Cadastros
+        </button>
+        <button onclick="toggleTheme();toggleUserMenu()" style="width:100%;display:flex;align-items:center;gap:10px;
+          padding:10px 16px;background:none;border:none;
+          color:var(--text);font-family:var(--font);font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s;"
+          onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          🌙 Alternar tema
+        </button>
+      </div>
     </div>
   </div>
 </header>
@@ -3690,9 +3713,24 @@ function removeFoto(coletaId, idx) {
   toast('🗑 Foto removida', '#e84393');
 }
 
-function autoSave() {
-  if (!currentDRC) return;
-  if (isLocked(currentDRC)) return; // não salva se bloqueado
+function toggleUserMenu() {
+  const menu = document.getElementById('user-menu');
+  const arrow = document.getElementById('user-menu-arrow');
+  if (!menu) return;
+  const open = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  if (arrow) arrow.textContent = open ? '▾' : '▴';
+}
+// Close user menu when clicking outside
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('user-dropdown-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const menu = document.getElementById('user-menu');
+    const arrow = document.getElementById('user-menu-arrow');
+    if (menu) menu.style.display = 'none';
+    if (arrow) arrow.textContent = '▾';
+  }
+});
   currentDRC.dataAlteracao = new Date().toISOString();
   var idx = drcs.findIndex(function(d){ return d.id === currentDRC.id; });
   if (idx >= 0) drcs[idx] = currentDRC;
