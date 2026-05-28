@@ -455,7 +455,13 @@ const ROLE_LABEL = {
 // ── Render cards ────────────────────────────────────────
 function renderModules(user) {
   const grid = document.getElementById('modules-grid');
-  const allowed = MODULES.filter(m => m.roles.includes(user.role));
+  const allowed = MODULES.filter(m => {
+    // 1. Check individual permission first (overrides role)
+    const custom = user.permissoes_custom?.modulos;
+    if (custom && custom[m.id] !== undefined) return custom[m.id];
+    // 2. Fallback to role
+    return m.roles.includes(user.role);
+  });
 
   if (!allowed.length) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:.9rem;padding:32px;">

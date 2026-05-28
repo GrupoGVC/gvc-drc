@@ -111,7 +111,11 @@ elseif($action==='logout' && $method==='POST'){
 // ── ME ───────────────────────────────────────────────────
 elseif($action==='me' && $method==='GET'){
     $u=require_auth();
-    ok(['nome'=>$u['nome'],'role'=>$u['role'],'email'=>$u['email'],'unidade'=>$u['unidade']??'','permissions'=>ROLE_PERMISSIONS[$u['role']]??[]]);
+    $pCustom = $u['permissoes_custom'] ?? null;
+    $pDecoded = $pCustom ? (json_decode($pCustom, true) ?? []) : null;
+    ok(['nome'=>$u['nome'],'role'=>$u['role'],'email'=>$u['email'],'unidade'=>$u['unidade']??'',
+        'permissions'=>ROLE_PERMISSIONS[$u['role']]??[],
+        'permissoes_custom'=>$pDecoded]);
 }
 // ── LIST DRCs ────────────────────────────────────────────
 elseif($action==='list_drcs' && $method==='GET'){
@@ -170,7 +174,11 @@ elseif($action==='save_cadastros' && $method==='POST'){
 // ── USUARIOS ─────────────────────────────────────────────
 elseif($action==='list_usuarios' && $method==='GET'){
     require_auth(['gestor']);
-    ok(db()->query('SELECT id,nome,email,role,unidade,ativo,created_at FROM usuarios ORDER BY nome')->fetchAll());
+    $rows = db()->query('SELECT id,nome,email,role,unidade,ativo,permissoes_custom,created_at FROM usuarios ORDER BY nome')->fetchAll();
+    foreach($rows as &$row) {
+        $row['permissoes_custom'] = $row['permissoes_custom'] ? json_decode($row['permissoes_custom'], true) : null;
+    }
+    ok($rows);
 }
 elseif($action==='list_consultores' && $method==='GET'){
     require_auth(); // qualquer usuário autenticado
@@ -198,6 +206,14 @@ elseif($action==='update_usuario' && $method==='POST'){
     $stmt->execute([$nome,$email,$role,$unidade,$id]);
     if(!empty($b['nova_senha']) && strlen($b['nova_senha'])>=6)
         db()->prepare('UPDATE usuarios SET senha_hash=? WHERE id=?')->execute([password_hash($b['nova_senha'],PASSWORD_BCRYPT),$id]);
+    ok();
+}
+elseif($action==='save_permissoes' && $method==='POST'){
+    require_auth(['gestor']); $b=body();
+    $id=$b['id']??0; $perm=$b['permissoes_custom']??null;
+    if(!$id) err('ID obrigatório');
+    $json = $perm !== null ? json_encode($perm, JSON_UNESCAPED_UNICODE) : null;
+    db()->prepare('UPDATE usuarios SET permissoes_custom=? WHERE id=?')->execute([$json, $id]);
     ok();
 }
 elseif($action==='toggle_usuario' && $method==='POST'){

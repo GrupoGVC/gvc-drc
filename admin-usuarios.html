@@ -129,6 +129,42 @@ tr:hover td { background:var(--s2); }
 .act-btn.toggle-off:hover { background:var(--green-dim); }
 .act-btn.del { border-color:rgba(248,113,113,.2); color:var(--red); opacity:.6; }
 .act-btn.del:hover { opacity:1; background:var(--red-dim); }
+.act-btn.perm { border-color:rgba(167,139,250,.3); color:var(--purple,#a78bfa); }
+.act-btn.perm:hover { background:rgba(167,139,250,.1); }
+.custom-badge { font-family:var(--mono); font-size:.5rem; padding:1px 6px; border-radius:10px;
+  background:rgba(167,139,250,.15); color:#a78bfa; border:1px solid rgba(167,139,250,.3); font-weight:700; margin-left:4px; }
+/* Perm Modal */
+.perm-overlay { display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,.65); backdrop-filter:blur(4px);
+  align-items:center; justify-content:center; }
+.perm-overlay.open { display:flex; }
+.perm-modal { background:var(--s1); border:1px solid var(--bd2); border-radius:16px; width:620px; max-width:95vw;
+  max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+.perm-modal-hd { padding:18px 22px 14px; border-bottom:1px solid var(--bd); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.perm-modal-title { font-family:var(--mono); font-size:.75rem; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.1em; }
+.perm-modal-body { overflow-y:auto; padding:18px 22px; flex:1; }
+.perm-modal-ft { padding:14px 22px; border-top:1px solid var(--bd); display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; }
+.perm-section { margin-bottom:20px; }
+.perm-section-title { font-family:var(--mono); font-size:.6rem; font-weight:700; color:var(--muted); text-transform:uppercase;
+  letter-spacing:.1em; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--bd); }
+.perm-row { display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:8px;
+  border:1px solid var(--bd); background:var(--s2); margin-bottom:6px; transition:border-color .15s; }
+.perm-row:hover { border-color:var(--bd2); }
+.perm-row-info { display:flex; align-items:center; gap:10px; }
+.perm-row-icon { font-size:1rem; width:24px; text-align:center; }
+.perm-row-label { font-size:.84rem; font-weight:600; color:var(--text); }
+.perm-row-hint { font-size:.7rem; color:var(--muted); margin-top:1px; }
+.perm-inherited { font-family:var(--mono); font-size:.58rem; color:var(--muted); padding:2px 7px; border-radius:10px;
+  background:var(--s0); border:1px solid var(--bd); }
+/* Toggle switch */
+.toggle-wrap { display:flex; align-items:center; gap:8px; }
+.toggle { position:relative; width:42px; height:24px; }
+.toggle input { opacity:0; width:0; height:0; position:absolute; }
+.toggle-slider { position:absolute; inset:0; background:var(--bd2); border-radius:12px; cursor:pointer; transition:.2s; }
+.toggle-slider:before { content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px;
+  background:#fff; border-radius:50%; transition:.2s; }
+.toggle input:checked + .toggle-slider { background:#a78bfa; }
+.toggle input:checked + .toggle-slider:before { transform:translateX(18px); }
+.toggle-val { font-family:var(--mono); font-size:.62rem; font-weight:700; min-width:24px; }
 
 /* PERMISSION MATRIX */
 .perm-section { margin-top:28px; }
@@ -391,11 +427,12 @@ function renderTable() {
         </div></td>
         <td><div style="font-weight:600;">${u.nome}</div></td>
         <td><div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);">${u.email}</div></td>
-        <td><span class="role-badge role-${u.role}">${rm.icon} ${rm.label}</span></td>
+        <td><span class="role-badge role-${u.role}">${rm.icon} ${rm.label}</span>${u.permissoes_custom?'<span class="custom-badge">🔑 custom</span>':''}</td>
         <td><span style="font-size:.75rem;color:var(--muted);">${u.unidade||'—'}</span></td>
         <td><span style="font-family:var(--mono);font-size:.7rem;color:var(--muted);">${dt}</span></td>
         <td><div class="td-actions">
           <button class="act-btn edit" onclick="openModal(${u.id})">✏ Editar</button>
+          <button class="act-btn perm" onclick="openPermModal(${u.id})" title="Configurar permissões individuais">🔑</button>
           <button class="act-btn ${ativo?'toggle-on':'toggle-off'}" onclick="toggleUser(${u.id},${ativo})">
             ${ativo?'⛔ Desativar':'✅ Ativar'}
           </button>
@@ -528,6 +565,176 @@ function toast(msg,color) {
   el.classList.add('show'); clearTimeout(_toastTmr);
   _toastTmr=setTimeout(()=>el.classList.remove('show'),3400);
 }
+
+// ── PERMISSIONS MODAL ────────────────────────────────────────
+const MODULOS_CONFIG = [
+  { id:'pricing',      label:'DRC — Precificação',    icon:'📋', roles:['gestor','consultor','financeiro','diretor'] },
+  { id:'meus_drcs',    label:'Meus DRCs',             icon:'📊', roles:['consultor','gestor'] },
+  { id:'operacional',  label:'Módulo Operacional',    icon:'⚙',  roles:['operacional','gestor'] },
+  { id:'cadastros',    label:'Cadastros do Sistema',  icon:'🗂',  roles:['gestor'] },
+  { id:'admin',        label:'Admin de Usuários',     icon:'👥',  roles:['gestor'] },
+  { id:'mapeamento',   label:'Mapeamento GVC',        icon:'🗺',  roles:['gestor'] },
+];
+
+const ACOES_CONFIG = [
+  { group:'DRCs', items:[
+    { id:'drc_criar',           label:'Criar DRC',                        roles:['gestor','consultor'] },
+    { id:'drc_editar_proprio',  label:'Editar próprio DRC',               roles:['gestor','consultor'] },
+    { id:'drc_editar_outros',   label:'Editar DRC de outros consultores', roles:['gestor'] },
+    { id:'drc_excluir',         label:'Excluir DRC',                      roles:['gestor'] },
+    { id:'drc_alterar_status',  label:'Alterar status do DRC',            roles:['gestor','consultor'] },
+    { id:'drc_duplicar',        label:'Duplicar DRC',                     roles:['gestor','consultor'] },
+  ]},
+  { group:'Aprovação', items:[
+    { id:'aprovar_reprovar',    label:'Aprovar / Reprovar DRC',           roles:['gestor','diretor'] },
+  ]},
+  { group:'Visualização', items:[
+    { id:'ver_custos_margens',  label:'Ver custos e margens',             roles:['gestor','financeiro','diretor','consultor'] },
+    { id:'ver_drcs_todos',      label:'Ver DRCs de todos os consultores', roles:['gestor','diretor','financeiro'] },
+  ]},
+];
+
+let permUserId = null;
+let permUserData = null;
+let permCurrent = {};
+
+function openPermModal(id) {
+  permUserId = id;
+  permUserData = users.find(u => u.id === id);
+  if (!permUserData) return;
+  permCurrent = permUserData.permissoes_custom
+    ? JSON.parse(JSON.stringify(permUserData.permissoes_custom))
+    : { modulos:{}, acoes:{} };
+  if (!permCurrent.modulos) permCurrent.modulos = {};
+  if (!permCurrent.acoes)   permCurrent.acoes   = {};
+  document.getElementById('perm-user-info').innerHTML =
+    '<strong>' + permUserData.nome + '</strong> &mdash; ' +
+    (ROLE_META[permUserData.role]?.icon||'') + ' ' + (ROLE_META[permUserData.role]?.label||permUserData.role);
+  renderPermModalBody();
+  document.getElementById('perm-overlay').classList.add('open');
+}
+
+function closePermModal() {
+  document.getElementById('perm-overlay').classList.remove('open');
+  permUserId = null; permUserData = null; permCurrent = {};
+}
+
+function roleHasModulo(role, moduloId) {
+  const mod = MODULOS_CONFIG.find(m => m.id === moduloId);
+  return mod ? mod.roles.includes(role) : false;
+}
+
+function roleHasAcao(role, acaoId) {
+  for (const g of ACOES_CONFIG) {
+    const item = g.items.find(i => i.id === acaoId);
+    if (item) return item.roles.includes(role);
+  }
+  return false;
+}
+
+function getEffectiveVal(type, id, role) {
+  const custom = permCurrent[type]?.[id];
+  if (custom !== undefined) return { val: custom, source: 'custom' };
+  const fromRole = type === 'modulos' ? roleHasModulo(role, id) : roleHasAcao(role, id);
+  return { val: fromRole, source: 'role' };
+}
+
+function renderPermModalBody() {
+  const role = permUserData.role;
+  let html = '';
+  html += '<div class="perm-section">';
+  html += '<div class="perm-section-title">🖥 Acesso aos Módulos</div>';
+  MODULOS_CONFIG.forEach(mod => {
+    const { val, source } = getEffectiveVal('modulos', mod.id, role);
+    const srcLabel = source === 'custom'
+      ? '<span class="perm-inherited" style="color:#a78bfa;border-color:rgba(167,139,250,.4);">⚙ individual</span>'
+      : '<span class="perm-inherited">📋 do perfil</span>';
+    html += `<div class="perm-row">
+      <div class="perm-row-info">
+        <div class="perm-row-icon">${mod.icon}</div>
+        <div class="perm-row-label">${mod.label}</div>
+      </div>
+      <div class="toggle-wrap">
+        ${srcLabel}
+        <label class="toggle">
+          <input type="checkbox" ${val?'checked':''} onchange="setPermCustom('modulos','${mod.id}',this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-val" style="color:${val?'#a78bfa':'var(--muted)'};">${val?'ON':'OFF'}</span>
+      </div>
+    </div>`;
+  });
+  html += '</div><div class="perm-section"><div class="perm-section-title">⚡ Permissões de Ação</div>';
+  ACOES_CONFIG.forEach(group => {
+    html += `<div style="font-family:var(--mono);font-size:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.07em;margin:10px 0 6px;">${group.group}</div>`;
+    group.items.forEach(item => {
+      const { val, source } = getEffectiveVal('acoes', item.id, role);
+      const srcLabel = source === 'custom'
+        ? '<span class="perm-inherited" style="color:#a78bfa;border-color:rgba(167,139,250,.4);">⚙ individual</span>'
+        : '<span class="perm-inherited">📋 do perfil</span>';
+      html += `<div class="perm-row">
+        <div class="perm-row-info">
+          <div class="perm-row-label">${item.label}</div>
+        </div>
+        <div class="toggle-wrap">
+          ${srcLabel}
+          <label class="toggle">
+            <input type="checkbox" ${val?'checked':''} onchange="setPermCustom('acoes','${item.id}',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-val" style="color:${val?'#a78bfa':'var(--muted)'};">${val?'ON':'OFF'}</span>
+        </div>
+      </div>`;
+    });
+  });
+  html += '</div>';
+  document.getElementById('perm-modal-body').innerHTML = html;
+}
+
+function setPermCustom(type, id, val) {
+  if (!permCurrent[type]) permCurrent[type] = {};
+  const roleDefault = type === 'modulos' ? roleHasModulo(permUserData.role, id) : roleHasAcao(permUserData.role, id);
+  if (val === roleDefault) { delete permCurrent[type][id]; } else { permCurrent[type][id] = val; }
+  renderPermModalBody();
+}
+
+async function savePermissoes() {
+  if (!permUserId) return;
+  const hasCustom = Object.keys(permCurrent.modulos||{}).length > 0 || Object.keys(permCurrent.acoes||{}).length > 0;
+  const payload = hasCustom ? permCurrent : null;
+  try {
+    await GvcUsuarios.savePermissoes(permUserId, payload);
+    const u = users.find(x => x.id === permUserId);
+    if (u) u.permissoes_custom = payload;
+    closePermModal();
+    renderUsers();
+    showToast('✅ Permissões salvas com sucesso');
+  } catch(e) { showToast('❌ Erro: ' + e.message); }
+}
+
+async function clearPermissoes() {
+  if (!confirm('Resetar todas as permissões individuais de ' + permUserData?.nome + ' para o padrão do perfil?')) return;
+  permCurrent = { modulos:{}, acoes:{} };
+  renderPermModalBody();
+}
 </script>
+
+<!-- ── PERMISSIONS MODAL ───────────────────────────────── -->
+<div class="perm-overlay" id="perm-overlay" onclick="if(event.target===this)closePermModal()">
+  <div class="perm-modal">
+    <div class="perm-modal-hd">
+      <div>
+        <div class="perm-modal-title">🔑 Permissões do Usuário</div>
+        <div id="perm-user-info" style="font-size:.75rem;color:var(--muted);margin-top:3px;"></div>
+      </div>
+      <button onclick="closePermModal()" style="background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px;">✕</button>
+    </div>
+    <div class="perm-modal-body" id="perm-modal-body"></div>
+    <div class="perm-modal-ft">
+      <button class="btn-secondary" onclick="clearPermissoes()">🗑 Resetar para padrão do perfil</button>
+      <button class="btn-primary" onclick="savePermissoes()">💾 Salvar permissões</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

@@ -118,6 +118,9 @@ const GvcUsuarios = {
   async listConsultores() {
     return await _req('list_consultores', 'GET');
   },
+  async savePermissoes(id, permissoes_custom) {
+    return await _req('save_permissoes', 'POST', { id, permissoes_custom });
+  },
 };
 
 // ── Guard de autenticação ────────────────────────────
