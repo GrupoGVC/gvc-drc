@@ -3731,7 +3731,9 @@ document.addEventListener('click', function(e) {
     if (arrow) arrow.textContent = '▾';
   }
 });
-  currentDRC.dataAlteracao = new Date().toISOString();
+function autoSave() {
+  if (!currentDRC) return;
+  if (isLocked(currentDRC)) return; // não salva se bloqueado
   var idx = drcs.findIndex(function(d){ return d.id === currentDRC.id; });
   if (idx >= 0) drcs[idx] = currentDRC;
   try {
