@@ -1342,6 +1342,27 @@ function showToast(msg, color) {
   requestAnimationFrame(() => { t.style.opacity = '1'; });
   setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
 }
+
+// ── THEME ──────────────────────────────────────────────────
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const newTheme = isLight ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = newTheme === 'light' ? '☀️' : '🌙';
+  localStorage.setItem('gvc_theme', newTheme);
+}
+(function() {
+  const saved = localStorage.getItem('gvc_theme') || 'dark';
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('theme-toggle');
+      if (btn) btn.textContent = '☀️';
+    });
+  }
+})();
+
 </script>
 </body>
 </html>

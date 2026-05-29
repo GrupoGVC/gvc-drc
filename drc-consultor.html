@@ -194,6 +194,18 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
   .detail.mobile-open{display:block;}
   .sidebar{height:auto;max-height:50vh;}
 }
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+  --bg: #f0f2f5; --surface: #ffffff; --surface2: #f7f8fa;
+  --border: #e2e6ec; --border2: #d0d5dd;
+  --retec-dim: rgba(0,180,130,0.08); --retec-glow: rgba(0,180,130,0.25);
+  --text: #1a2332; --text-muted: #6b7a8d; --text-dim: #a0aab6;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea { background: #fff; color: #1a2332; }
 </style>
 </head>
 <body>
@@ -217,6 +229,11 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
         <div class="user-role" id="user-role">CONSULTOR</div>
       </div>
     </div>
+<button id="theme-toggle" onclick="toggleTheme()" title="Alternar tema"
+  style="background:none;border:1px solid var(--border2,#252d36);border-radius:8px;
+         padding:6px 10px;cursor:pointer;font-size:.9rem;color:var(--text-muted);
+         transition:all .15s;line-height:1;"
+  onmouseover="this.style.borderColor='var(--retec)'" onmouseout="this.style.borderColor='var(--border2,#252d36)'">🌙</button>
     <button class="hbtn" onclick="location.href='index.html'">← Portal</button>
   </div>
 </header>
@@ -564,6 +581,27 @@ function openLightbox(src, lbl) {
     location.href = 'login.html';
   }
 })();
+
+// ── THEME ──────────────────────────────────────────────────
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const newTheme = isLight ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = newTheme === 'light' ? '☀️' : '🌙';
+  localStorage.setItem('gvc_theme', newTheme);
+}
+(function() {
+  const saved = localStorage.getItem('gvc_theme') || 'dark';
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('theme-toggle');
+      if (btn) btn.textContent = '☀️';
+    });
+  }
+})();
+
 </script>
 </body>
 </html>

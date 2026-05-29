@@ -223,6 +223,18 @@ tr:hover td { background:var(--s2); }
   .perm-grid { grid-template-columns:1fr; }
   .field-row { grid-template-columns:1fr; }
 }
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+  --bg: #f0f2f5; --surface: #ffffff; --surface2: #f7f8fa;
+  --border: #e2e6ec; --border2: #d0d5dd;
+  --retec-dim: rgba(0,180,130,0.08); --retec-glow: rgba(0,180,130,0.25);
+  --text: #1a2332; --text-muted: #6b7a8d; --text-dim: #a0aab6;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea { background: #fff; color: #1a2332; }
 </style>
 </head>
 <body>
@@ -245,6 +257,11 @@ tr:hover td { background:var(--s2); }
         <div class="user-role" id="user-role">—</div>
       </div>
     </div>
+<button id="theme-toggle" onclick="toggleTheme()" title="Alternar tema"
+  style="background:none;border:1px solid var(--border2,#252d36);border-radius:8px;
+         padding:6px 10px;cursor:pointer;font-size:.9rem;color:var(--text-muted);
+         transition:all .15s;line-height:1;"
+  onmouseover="this.style.borderColor='var(--retec)'" onmouseout="this.style.borderColor='var(--border2,#252d36)'">🌙</button>
     <button class="hbtn" onclick="location.href='index.html'">← Portal</button>
   </div>
 </header>
