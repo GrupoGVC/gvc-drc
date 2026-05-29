@@ -222,19 +222,36 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
     </div>
   </div>
   <div class="hright">
-    <div class="user-badge">
-      <div class="user-dot"></div>
-      <div>
-        <div class="user-name" id="user-name">—</div>
-        <div class="user-role" id="user-role">CONSULTOR</div>
+    <div id="user-dropdown-wrap" style="position:relative;display:inline-block;">
+      <div onclick="toggleUserMenu()" style="display:flex;align-items:center;gap:8px;padding:5px 12px;
+        background:var(--surface2);border:1px solid var(--border2);border-radius:20px;
+        cursor:pointer;transition:border-color .15s;user-select:none;"
+        onmouseover="this.style.borderColor='var(--retec)'" onmouseout="this.style.borderColor='var(--border2)'">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--retec);box-shadow:0 0 6px var(--retec);animation:pulse 2s infinite;flex-shrink:0;"></div>
+        <div>
+          <div style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.65rem;color:var(--text);" id="user-name">—</div>
+          <div style="font-family:var(--font-mono,'Space Mono',monospace);font-size:.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;" id="user-role">—</div>
+        </div>
+        <span id="user-menu-arrow" style="font-size:.6rem;color:var(--text-muted);margin-left:2px;">▾</span>
+      </div>
+      <div id="user-menu" style="display:none;position:absolute;top:calc(100% + 8px);right:0;
+        background:var(--surface);border:1px solid var(--border2);border-radius:12px;
+        box-shadow:0 8px 24px rgba(0,0,0,.35);min-width:180px;z-index:9999;overflow:hidden;">
+        <button onclick="toggleTheme();toggleUserMenu()" style="width:100%;display:flex;align-items:center;gap:10px;
+          padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);
+          color:var(--text);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s;"
+          onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          <span id="theme-menu-lbl">🌙 Tema escuro</span>
+        </button>
+        <button onclick="location.href='index.html'" style="width:100%;display:flex;align-items:center;gap:10px;
+          padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);
+          color:var(--text);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s;"
+          onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+          ← Portal
+        </button>
       </div>
     </div>
-<button id="theme-toggle" onclick="toggleTheme()" title="Alternar tema"
-  style="background:none;border:1px solid var(--border2,#252d36);border-radius:8px;
-         padding:6px 10px;cursor:pointer;font-size:.9rem;color:var(--text-muted);
-         transition:all .15s;line-height:1;"
-  onmouseover="this.style.borderColor='var(--retec)'" onmouseout="this.style.borderColor='var(--border2,#252d36)'">🌙</button>
-    <button class="hbtn" onclick="location.href='index.html'">← Portal</button>
+    </div>
   </div>
 </header>
 
