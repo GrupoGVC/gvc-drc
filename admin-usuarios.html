@@ -398,10 +398,16 @@ let _toastTmr;
 (async () => {
   const u = await requireAuth(['gestor']);
   if (!u) return;
-  const ud = document.getElementById('user-display');
-  const rd = document.getElementById('role-display');
-  if (ud) ud.textContent = u.nome;
-  if (rd) rd.textContent = u.role;
+  const un = document.getElementById('user-name');
+  const ur = document.getElementById('user-role');
+  if (un) un.textContent = u.nome;
+  if (ur) ur.textContent = (u.role || '').toUpperCase();
+  // Pre-populate from localStorage immediately
+  try {
+    const cached = JSON.parse(localStorage.getItem('gvc_user') || '{}');
+    if (cached.nome && un && !un.textContent) un.textContent = cached.nome;
+    if (cached.role && ur && !ur.textContent) ur.textContent = (cached.role || '').toUpperCase();
+  } catch(e) {}
   await loadUsers();
   renderPermMatrix();
 })();
