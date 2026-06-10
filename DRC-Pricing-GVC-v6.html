@@ -2178,7 +2178,10 @@ async function load() {
 async function save() {
   const idx = drcs.findIndex(d => d.id === currentDRC?.id);
   if (idx >= 0) drcs[idx] = currentDRC;
-  try { await GvcDRC.save(currentDRC); }
+  try {
+    await GvcDRC.save(currentDRC);
+    toast('✅ DRC salvo com sucesso', '#00c896');
+  }
   catch(e) { toast('❌ Erro ao salvar: ' + e.message, '#f87171'); }
 }
 
@@ -4153,7 +4156,11 @@ function saveDRC() {
   const idx = drcs.findIndex(d => d.id === currentDRC.id);
   if (idx >= 0) drcs[idx] = currentDRC;
   else drcs.push(currentDRC);
-  save();
+  const btn = document.getElementById('btn-save');
+  if (btn) { btn.textContent = '⏳ Salvando...'; btn.disabled = true; }
+  save().finally(() => {
+    if (btn) { btn.textContent = '💾 Salvar'; btn.disabled = false; }
+  });
 }
 
 function deleteDRC(id) {
