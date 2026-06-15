@@ -1062,7 +1062,7 @@ let cadastros = {
   empresasLogos: {},
   unidades:      ['CIA Sul — Simões Filho', 'Unidade Salvador', 'Unidade Feira de Santana'],
   categorias:    ['Coleta e Transporte', 'Tratamento / Destinação', 'Locação de Equipamentos', 'Consultoria / Laudos', 'Operações Especiais'],
-  tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00, diaria_mo_ambiental: 180.00, diaria_sst: 180.00, diaria_supervisor: 220.00 },
+  tabelaMO: { diaria_ajudante: 0, diaria_motorista: 0, pernoite: 0, diaria_mo_ambiental: 0, diaria_sst: 0, diaria_supervisor: 0 },
   justificativas: [
     'Preço acima do mercado',
     'Cliente optou por outro fornecedor',
@@ -2169,7 +2169,7 @@ async function load() {
       if (!cadastros.empresasLogos)  cadastros.empresasLogos  = {};
             if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
       if (!cadastros.receptores) cadastros.receptores = null;
-      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00, diaria_mo_ambiental: 180.00, diaria_sst: 180.00, diaria_supervisor: 220.00 };
+      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 0, diaria_motorista: 0, pernoite: 0, diaria_mo_ambiental: 0, diaria_sst: 0, diaria_supervisor: 0 };
       if (cadastros.tabelaMO && cadastros.tabelaMO.diaria_mo_ambiental === undefined) { cadastros.tabelaMO.diaria_mo_ambiental = 180.00; cadastros.tabelaMO.diaria_sst = 180.00; cadastros.tabelaMO.diaria_supervisor = 220.00; }
     }
   } catch(e) { console.error('load cadastros error:', e); }
@@ -2231,10 +2231,10 @@ function newColeta(n) {
     pernoite: 0, moAmbiental: 0, sst: 0, supervisorOp: 0, limpezaSAO: 0, viagemCVR: 0, vacuoSucao: 0,
     retroescavadeira: 0, kitBomba: 0,
     precoBaseVenda: 0,
-    dieselPorLitro: 6.2, manobraAjudante: cadastros.tabelaMO?.diaria_ajudante || 180, manobraMot: cadastros.tabelaMO?.diaria_motorista || 220,
-    moAmbiental: 0, manobraMoAmb: cadastros.tabelaMO?.diaria_mo_ambiental || 180,
-    sst: 0, manobraSST: cadastros.tabelaMO?.diaria_sst || 180,
-    supervisorOp: 0, manobraSup: cadastros.tabelaMO?.diaria_supervisor || 220,
+    dieselPorLitro: 6.2, manobraAjudante: cadastros.tabelaMO?.diaria_ajudante || 0, manobraMot: cadastros.tabelaMO?.diaria_motorista || 0,
+    moAmbiental: 0, manobraMoAmb: cadastros.tabelaMO?.diaria_mo_ambiental || 0,
+    sst: 0, manobraSST: cadastros.tabelaMO?.diaria_sst || 0,
+    supervisorOp: 0, manobraSup: cadastros.tabelaMO?.diaria_supervisor || 0,
     manutencao: 0, ipva: 0,
     custoOperacao: 0, custoDestinacao: 0,
     tempoServicoH: 0, tempoServicoMin: 0,
@@ -2266,10 +2266,10 @@ function calcColeta(c) {
   const pedagio = (Number(c.pedagio) || 0) * numViagens;
   const ajud   = (Number(c.ajudante)     || 0) * (Number(c.manobraAjudante) || 0);
   const mot    = (Number(c.motorista)    || 0) * (Number(c.manobraMot)      || 0);
-  const moAmb  = (Number(c.moAmbiental)  || 0) * (Number(c.manobraMoAmb)   || cadastros.tabelaMO?.diaria_mo_ambiental || 180);
-  const sst    = (Number(c.sst)          || 0) * (Number(c.manobraSST)     || cadastros.tabelaMO?.diaria_sst          || 180);
-  const sup    = (Number(c.supervisorOp) || 0) * (Number(c.manobraSup)     || cadastros.tabelaMO?.diaria_supervisor   || 220);
-  const pernoite = (Number(c.pernoite) || 0) * (Number(cadastros.tabelaMO?.pernoite) || 160);
+  const moAmb  = (Number(c.moAmbiental)  || 0) * (Number(c.manobraMoAmb)   || cadastros.tabelaMO?.diaria_mo_ambiental || 0);
+  const sst    = (Number(c.sst)          || 0) * (Number(c.manobraSST)     || cadastros.tabelaMO?.diaria_sst          || 0);
+  const sup    = (Number(c.supervisorOp) || 0) * (Number(c.manobraSup)     || cadastros.tabelaMO?.diaria_supervisor   || 0);
+  const pernoite = (Number(c.pernoite) || 0) * (Number(cadastros.tabelaMO?.pernoite) || 0);
   const depr = km > 0 ? (DEPR_VEICULO[c.veiculo] || 0) * numViagens : 0;
   const seguro = km > 0 ? (SEGURO_VEICULO[c.veiculo] || 0) * numViagens : 0;
   const limpeza = 0;
@@ -2358,7 +2358,7 @@ function calcDRC(drc) {
     lucroBruto, margemOD, margemADM, comissao, resultadoAntesIR,
     margem, liquido, lucroLiq,
     iss, pis, cofins, ir, csll,
-    recTransp, recDest, recLoc, recOp
+    recTransp, recDest, recLoc, recOp, despDest, despLoc, despOp
   };
 }
 
@@ -2804,7 +2804,10 @@ function renderForm() {
     '<div class="section-header">' +
       '<span class="section-icon">♻️</span>' +
       '<span class="section-title">Tratamento e Destinação</span>' +
-      '<span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recDest) + '</span>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-left:auto;">' +
+        '<span id="hdr-dest-total" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recDest) + '</span>' +
+        '<span id="hdr-dest-margin" style="font-family:var(--font-mono);font-size:0.65rem;padding:2px 7px;border-radius:10px;background:' + (r.recDest>0?(r.recDest-r.despDest)/r.recDest>0.2?'rgba(0,200,150,.12)':'rgba(245,166,35,.12)':'rgba(90,101,119,.1)') + ';color:' + (r.recDest>0?(r.recDest-r.despDest)/r.recDest>0.2?'var(--retec)':'var(--orange)':'var(--text-muted)') + ';border:1px solid ' + (r.recDest>0?(r.recDest-r.despDest)/r.recDest>0.2?'rgba(0,200,150,.25)':'rgba(245,166,35,.25)':'rgba(90,101,119,.2)') + ';">' + (r.recDest>0?((r.recDest-r.despDest)/r.recDest*100).toFixed(1)+'%':'—') + '</span>' +
+      '</div>' +
     '</div>' +
     '<div class="section-body">' +
       '<table class="items-table" style="width:100%">' +
@@ -2820,7 +2823,10 @@ function renderForm() {
     '<div class="section-header">' +
       '<span class="section-icon">📦</span>' +
       '<span class="section-title">Locação de Equipamentos</span>' +
-      '<span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recLoc) + '</span>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-left:auto;">' +
+        '<span id="hdr-loc-total" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recLoc) + '</span>' +
+        '<span id="hdr-loc-margin" style="font-family:var(--font-mono);font-size:0.65rem;padding:2px 7px;border-radius:10px;background:' + (r.recLoc>0?(r.recLoc-r.despLoc)/r.recLoc>0.2?'rgba(0,200,150,.12)':'rgba(245,166,35,.12)':'rgba(90,101,119,.1)') + ';color:' + (r.recLoc>0?(r.recLoc-r.despLoc)/r.recLoc>0.2?'var(--retec)':'var(--orange)':'var(--text-muted)') + ';border:1px solid ' + (r.recLoc>0?(r.recLoc-r.despLoc)/r.recLoc>0.2?'rgba(0,200,150,.25)':'rgba(245,166,35,.25)':'rgba(90,101,119,.2)') + ';">' + (r.recLoc>0?((r.recLoc-r.despLoc)/r.recLoc*100).toFixed(1)+'%':'—') + '</span>' +
+      '</div>' +
     '</div>' +
     '<div class="section-body">' +
       '<table class="items-table" style="width:100%">' +
@@ -2836,7 +2842,10 @@ function renderForm() {
     '<div class="section-header">' +
       '<span class="section-icon">⚙️</span>' +
       '<span class="section-title">Operações Especiais / Mão de Obra</span>' +
-      '<span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recOp) + '</span>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-left:auto;">' +
+        '<span id="hdr-op-total" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recOp) + '</span>' +
+        '<span id="hdr-op-margin" style="font-family:var(--font-mono);font-size:0.65rem;padding:2px 7px;border-radius:10px;background:' + (r.recOp>0?(r.recOp-r.despOp)/r.recOp>0.2?'rgba(0,200,150,.12)':'rgba(245,166,35,.12)':'rgba(90,101,119,.1)') + ';color:' + (r.recOp>0?(r.recOp-r.despOp)/r.recOp>0.2?'var(--retec)':'var(--orange)':'var(--text-muted)') + ';border:1px solid ' + (r.recOp>0?(r.recOp-r.despOp)/r.recOp>0.2?'rgba(0,200,150,.25)':'rgba(245,166,35,.25)':'rgba(90,101,119,.2)') + ';">' + (r.recOp>0?((r.recOp-r.despOp)/r.recOp*100).toFixed(1)+'%':'—') + '</span>' +
+      '</div>' +
     '</div>' +
     '<div class="section-body">' +
       '<table class="items-table" style="width:100%">' +
@@ -3270,10 +3279,10 @@ function renderColeta(c, i) {
       <div class="form-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px;">
         <div class="field"><label>Ajudante (diárias)</label><input type="number" value="${c.ajudante||0}" oninput="updateColeta('${c.id}','ajudante',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-ajud-${c.id}">${fmt((c.ajudante||0)*(c.manobraAjudante||0))}</span></div>
         <div class="field"><label>Motorista (diárias)</label><input type="number" value="${c.motorista||0}" oninput="updateColeta('${c.id}','motorista',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-mot-${c.id}">${fmt((c.motorista||0)*(c.manobraMot||0))}</span></div>
-        <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*(cadastros.tabelaMO?.pernoite||160))}</span></div>
-        <div class="field"><label>MO Ambiental (diárias)</label><input type="number" value="${c.moAmbiental||0}" oninput="updateColeta('${c.id}','moAmbiental',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-moamb-${c.id}">${fmt((c.moAmbiental||0)*(c.manobraMoAmb||cadastros.tabelaMO?.diaria_mo_ambiental||180))}</span></div>
-        <div class="field"><label>SST (diárias)</label><input type="number" value="${c.sst||0}" oninput="updateColeta('${c.id}','sst',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-sst-${c.id}">${fmt((c.sst||0)*(c.manobraSST||cadastros.tabelaMO?.diaria_sst||180))}</span></div>
-        <div class="field"><label>Supervisor Op. (diárias)</label><input type="number" value="${c.supervisorOp||0}" oninput="updateColeta('${c.id}','supervisorOp',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-sup-${c.id}">${fmt((c.supervisorOp||0)*(c.manobraSup||cadastros.tabelaMO?.diaria_supervisor||220))}</span></div>
+        <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*(cadastros.tabelaMO?.pernoite||0))}</span></div>
+        <div class="field"><label>MO Ambiental (diárias)</label><input type="number" value="${c.moAmbiental||0}" oninput="updateColeta('${c.id}','moAmbiental',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-moamb-${c.id}">${fmt((c.moAmbiental||0)*(c.manobraMoAmb||cadastros.tabelaMO?.diaria_mo_ambiental||0))}</span></div>
+        <div class="field"><label>SST (diárias)</label><input type="number" value="${c.sst||0}" oninput="updateColeta('${c.id}','sst',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-sst-${c.id}">${fmt((c.sst||0)*(c.manobraSST||cadastros.tabelaMO?.diaria_sst||0))}</span></div>
+        <div class="field"><label>Supervisor Op. (diárias)</label><input type="number" value="${c.supervisorOp||0}" oninput="updateColeta('${c.id}','supervisorOp',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-sup-${c.id}">${fmt((c.supervisorOp||0)*(c.manobraSup||cadastros.tabelaMO?.diaria_supervisor||0))}</span></div>
         
       </div>
       <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Serviços Extras</div>
@@ -3883,10 +3892,10 @@ function updateColeta(id, field, value) {
   };
   upd('val-ajud-'  + id, (Number(c.ajudante)||0)       * (Number(c.manobraAjudante)||0));
   upd('val-mot-'   + id, (Number(c.motorista)||0)       * (Number(c.manobraMot)||0));
-  upd('val-pern-'  + id, (Number(c.pernoite)||0)        * (Number(cadastros.tabelaMO?.pernoite)||160));
-  upd('val-moamb-' + id, (Number(c.moAmbiental)||0)     * (Number(c.manobraMoAmb||cadastros.tabelaMO?.diaria_mo_ambiental)||180));
-  upd('val-sst-'   + id, (Number(c.sst)||0)             * (Number(c.manobraSST||cadastros.tabelaMO?.diaria_sst)||180));
-  upd('val-sup-'   + id, (Number(c.supervisorOp)||0)    * (Number(c.manobraSup||cadastros.tabelaMO?.diaria_supervisor)||220));
+  upd('val-pern-'  + id, (Number(c.pernoite)||0)        * (Number(cadastros.tabelaMO?.pernoite)||0));
+  upd('val-moamb-' + id, (Number(c.moAmbiental)||0)     * (Number(c.manobraMoAmb||cadastros.tabelaMO?.diaria_mo_ambiental)||0));
+  upd('val-sst-'   + id, (Number(c.sst)||0)             * (Number(c.manobraSST||cadastros.tabelaMO?.diaria_sst)||0));
+  upd('val-sup-'   + id, (Number(c.supervisorOp)||0)    * (Number(c.manobraSup||cadastros.tabelaMO?.diaria_supervisor)||0));
   
   // Update coleta result block
   const rc = calcColeta(c);
@@ -4061,11 +4070,49 @@ function updateOp(id, field, value) {
   refreshResults();
 }
 
+
+function refreshSectionHeaders() {
+  if (!currentDRC) return;
+  const r = calcDRC(currentDRC);
+  const fmtPct = (rec, desp) => {
+    if (!rec || rec <= 0) return '—';
+    return ((rec - desp) / rec * 100).toFixed(1) + '%';
+  };
+  const mColor = (rec, desp) => {
+    if (!rec || rec <= 0) return 'var(--text-muted)';
+    return (rec - desp) / rec > 0.25 ? 'var(--retec)' : 'var(--orange)';
+  };
+  const mBg = (rec, desp) => {
+    if (!rec || rec <= 0) return 'rgba(90,101,119,.1)';
+    return (rec - desp) / rec > 0.25 ? 'rgba(0,200,150,.12)' : 'rgba(245,166,35,.12)';
+  };
+  const mBorder = (rec, desp) => {
+    if (!rec || rec <= 0) return 'rgba(90,101,119,.2)';
+    return (rec - desp) / rec > 0.25 ? 'rgba(0,200,150,.25)' : 'rgba(245,166,35,.25)';
+  };
+  // Destinação
+  const dT = document.getElementById('hdr-dest-total');
+  const dM = document.getElementById('hdr-dest-margin');
+  if (dT) dT.textContent = fmt(r.recDest);
+  if (dM) { dM.textContent = fmtPct(r.recDest, r.despDest); dM.style.color = mColor(r.recDest, r.despDest); dM.style.background = mBg(r.recDest, r.despDest); dM.style.borderColor = mBorder(r.recDest, r.despDest); }
+  // Locação
+  const lT = document.getElementById('hdr-loc-total');
+  const lM = document.getElementById('hdr-loc-margin');
+  if (lT) lT.textContent = fmt(r.recLoc);
+  if (lM) { lM.textContent = fmtPct(r.recLoc, r.despLoc); lM.style.color = mColor(r.recLoc, r.despLoc); lM.style.background = mBg(r.recLoc, r.despLoc); lM.style.borderColor = mBorder(r.recLoc, r.despLoc); }
+  // Op. Especiais
+  const oT = document.getElementById('hdr-op-total');
+  const oM = document.getElementById('hdr-op-margin');
+  if (oT) oT.textContent = fmt(r.recOp);
+  if (oM) { oM.textContent = fmtPct(r.recOp, r.despOp); oM.style.color = mColor(r.recOp, r.despOp); oM.style.background = mBg(r.recOp, r.despOp); oM.style.borderColor = mBorder(r.recOp, r.despOp); }
+}
+
 function refreshResults() {
   if (!currentDRC) return;
   const r = calcDRC(currentDRC);
   const rp = document.querySelector('.results-panel');
   if (rp) rp.outerHTML = renderResults(r);
+  refreshSectionHeaders();
   renderList();
 }
 
