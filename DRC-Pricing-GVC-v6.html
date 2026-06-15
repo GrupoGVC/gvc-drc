@@ -1062,7 +1062,7 @@ let cadastros = {
   empresasLogos: {},
   unidades:      ['CIA Sul — Simões Filho', 'Unidade Salvador', 'Unidade Feira de Santana'],
   categorias:    ['Coleta e Transporte', 'Tratamento / Destinação', 'Locação de Equipamentos', 'Consultoria / Laudos', 'Operações Especiais'],
-  tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 },
+  tabelaMO: { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00, diaria_mo_ambiental: 180.00, diaria_sst: 180.00, diaria_supervisor: 220.00 },
   justificativas: [
     'Preço acima do mercado',
     'Cliente optou por outro fornecedor',
@@ -1086,6 +1086,9 @@ function renderTabelaMOPanel() {
     { key: 'diaria_ajudante',  label: 'Diária do Ajudante',   icon: '👷', desc: 'Custo por diária de ajudante (R$/diária)' },
     { key: 'diaria_motorista', label: 'Diária do Motorista',  icon: '🚛', desc: 'Custo por diária de motorista (R$/diária)' },
     { key: 'pernoite',         label: 'Pernoite',             icon: '🌙', desc: 'Custo por pernoite (R$/diária)' },
+    { key: 'diaria_mo_ambiental', label: 'MO Ambiental',         icon: '🌿', desc: 'Custo por diária de MO Ambiental (R$/diária)' },
+    { key: 'diaria_sst',          label: 'SST',                  icon: '🦺', desc: 'Custo por diária de SST (R$/diária)' },
+    { key: 'diaria_supervisor',   label: 'Supervisor Operacional',icon: '👔', desc: 'Custo por diária de Supervisor Operacional (R$/diária)' },
   ];
 
   el.innerHTML = `
@@ -2166,7 +2169,8 @@ async function load() {
       if (!cadastros.empresasLogos)  cadastros.empresasLogos  = {};
             if (!cadastros.veiculos) cadastros.veiculos = ['Baú 3/4', 'Baú toco', 'Poli', 'Rolon Of', 'Poli/Rolon', 'Fiorino', 'HR', 'Romeu e Julieta', 'Sucção 12m³', 'Caminhão Pipa', 'Terceirizado', 'Especial'];
       if (!cadastros.receptores) cadastros.receptores = null;
-      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00 };
+      if (!cadastros.tabelaMO) cadastros.tabelaMO = { diaria_ajudante: 180.00, diaria_motorista: 220.00, pernoite: 160.00, diaria_mo_ambiental: 180.00, diaria_sst: 180.00, diaria_supervisor: 220.00 };
+      if (cadastros.tabelaMO && cadastros.tabelaMO.diaria_mo_ambiental === undefined) { cadastros.tabelaMO.diaria_mo_ambiental = 180.00; cadastros.tabelaMO.diaria_sst = 180.00; cadastros.tabelaMO.diaria_supervisor = 220.00; }
     }
   } catch(e) { console.error('load cadastros error:', e); }
   // Carrega consultores a partir dos usuários cadastrados
@@ -2224,10 +2228,13 @@ function newColeta(n) {
     veiculo: 'Baú 3/4',
     distanciaTotal: 0, mediaKm: 6, qtdViagens: 1, numViagens: 1, kmPercorrido: null,
     pedagio: 0, ajudante: 0, motorista: 0,
-    pernoite: 0, limpezaSAO: 0, viagemCVR: 0, vacuoSucao: 0,
+    pernoite: 0, moAmbiental: 0, sst: 0, supervisorOp: 0, limpezaSAO: 0, viagemCVR: 0, vacuoSucao: 0,
     retroescavadeira: 0, kitBomba: 0,
     precoBaseVenda: 0,
     dieselPorLitro: 6.2, manobraAjudante: cadastros.tabelaMO?.diaria_ajudante || 180, manobraMot: cadastros.tabelaMO?.diaria_motorista || 220,
+    moAmbiental: 0, manobraMoAmb: cadastros.tabelaMO?.diaria_mo_ambiental || 180,
+    sst: 0, manobraSST: cadastros.tabelaMO?.diaria_sst || 180,
+    supervisorOp: 0, manobraSup: cadastros.tabelaMO?.diaria_supervisor || 220,
     manutencao: 0, ipva: 0,
     custoOperacao: 0, custoDestinacao: 0,
     tempoServicoH: 0, tempoServicoMin: 0,
@@ -2257,8 +2264,11 @@ function calcColeta(c) {
   const litros = media > 0 ? km / media : 0;
   const diesel = litros * (Number(c.dieselPorLitro) || 6.2) * numViagens;
   const pedagio = (Number(c.pedagio) || 0) * numViagens;
-  const ajud = (Number(c.ajudante) || 0) * (Number(c.manobraAjudante) || 0);
-  const mot = (Number(c.motorista) || 0) * (Number(c.manobraMot) || 0);
+  const ajud   = (Number(c.ajudante)     || 0) * (Number(c.manobraAjudante) || 0);
+  const mot    = (Number(c.motorista)    || 0) * (Number(c.manobraMot)      || 0);
+  const moAmb  = (Number(c.moAmbiental)  || 0) * (Number(c.manobraMoAmb)   || cadastros.tabelaMO?.diaria_mo_ambiental || 180);
+  const sst    = (Number(c.sst)          || 0) * (Number(c.manobraSST)     || cadastros.tabelaMO?.diaria_sst          || 180);
+  const sup    = (Number(c.supervisorOp) || 0) * (Number(c.manobraSup)     || cadastros.tabelaMO?.diaria_supervisor   || 220);
   const pernoite = (Number(c.pernoite) || 0) * (Number(cadastros.tabelaMO?.pernoite) || 160);
   const depr = km > 0 ? (DEPR_VEICULO[c.veiculo] || 0) * numViagens : 0;
   const seguro = km > 0 ? (SEGURO_VEICULO[c.veiculo] || 0) * numViagens : 0;
@@ -2268,12 +2278,12 @@ function calcColeta(c) {
   const retro = Number(c.retroescavadeira) || 0;
   const kit = Number(c.kitBomba) || 0;
 
-  const custoTotal = diesel + pedagio + ajud + mot + pernoite + depr + seguro + limpeza + cvr + vacuo + retro + kit;
+  const custoTotal = diesel + pedagio + ajud + mot + pernoite + moAmb + sst + sup + depr + seguro + limpeza + cvr + vacuo + retro + kit;
   // Preço Base = Custo Total × Markup (2,35)
   const precoBase = custoTotal * MARKUP;
   const custoPorKm = km > 0 ? custoTotal / km : 0;
 
-  return { custoTotal, precoBase, custoPorKm, litros, diesel, depr, seguro, ajud, mot, pernoite, limpeza, cvr, vacuo, retro, kit, pedagio };
+  return { custoTotal, precoBase, custoPorKm, litros, diesel, depr, seguro, ajud, mot, pernoite, moAmb, sst, sup, limpeza, cvr, vacuo, retro, kit, pedagio };
 }
 
 function calcDRC(drc) {
@@ -3261,6 +3271,9 @@ function renderColeta(c, i) {
         <div class="field"><label>Ajudante (diárias)</label><input type="number" value="${c.ajudante||0}" oninput="updateColeta('${c.id}','ajudante',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-ajud-${c.id}">${fmt((c.ajudante||0)*(c.manobraAjudante||0))}</span></div>
         <div class="field"><label>Motorista (diárias)</label><input type="number" value="${c.motorista||0}" oninput="updateColeta('${c.id}','motorista',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-mot-${c.id}">${fmt((c.motorista||0)*(c.manobraMot||0))}</span></div>
         <div class="field"><label>Pernoite (diárias)</label><input type="number" value="${c.pernoite||0}" oninput="updateColeta('${c.id}','pernoite',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-pern-${c.id}">${fmt((c.pernoite||0)*(cadastros.tabelaMO?.pernoite||160))}</span></div>
+        <div class="field"><label>MO Ambiental (diárias)</label><input type="number" value="${c.moAmbiental||0}" oninput="updateColeta('${c.id}','moAmbiental',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-moamb-${c.id}">${fmt((c.moAmbiental||0)*(c.manobraMoAmb||cadastros.tabelaMO?.diaria_mo_ambiental||180))}</span></div>
+        <div class="field"><label>SST (diárias)</label><input type="number" value="${c.sst||0}" oninput="updateColeta('${c.id}','sst',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-sst-${c.id}">${fmt((c.sst||0)*(c.manobraSST||cadastros.tabelaMO?.diaria_sst||180))}</span></div>
+        <div class="field"><label>Supervisor Op. (diárias)</label><input type="number" value="${c.supervisorOp||0}" oninput="updateColeta('${c.id}','supervisorOp',this.value)" step="0.25" min="0" max="1000"><span class="field-calc" id="val-sup-${c.id}">${fmt((c.supervisorOp||0)*(c.manobraSup||cadastros.tabelaMO?.diaria_supervisor||220))}</span></div>
         
       </div>
       <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Serviços Extras</div>
@@ -3281,6 +3294,9 @@ function renderColeta(c, i) {
         <div class="cr-item"><span class="cr-label">Ajudante</span><span class="cr-val">${fmt(rc.ajud)}</span></div>
         <div class="cr-item"><span class="cr-label">Motorista</span><span class="cr-val">${fmt(rc.mot)}</span></div>
         <div class="cr-item"><span class="cr-label">Pernoite</span><span class="cr-val">${fmt(rc.pernoite)}</span></div>
+        <div class="cr-item"><span class="cr-label">MO Amb.</span><span class="cr-val">${fmt(rc.moAmb)}</span></div>
+        <div class="cr-item"><span class="cr-label">SST</span><span class="cr-val">${fmt(rc.sst)}</span></div>
+        <div class="cr-item"><span class="cr-label">Supervisor</span><span class="cr-val">${fmt(rc.sup)}</span></div>
         ${extrasTotal ? '<div class="cr-item"><span class="cr-label">Serviços Extra</span><span class="cr-val">' + fmt(extrasTotal) + '</span></div>' : ''}
         <div class="cr-item"><span class="cr-label" style="color:var(--text);">Custo Total</span><span class="cr-val" style="color:var(--text);font-weight:700;">${fmt(rc.custoTotal)}</span></div>
         <div class="cr-item"><span class="cr-label">Custo/km</span><span class="cr-val">R$ ${rc.custoPorKm.toFixed(2)}/km</span></div>
@@ -3868,6 +3884,9 @@ function updateColeta(id, field, value) {
   upd('val-ajud-'  + id, (Number(c.ajudante)||0)       * (Number(c.manobraAjudante)||0));
   upd('val-mot-'   + id, (Number(c.motorista)||0)       * (Number(c.manobraMot)||0));
   upd('val-pern-'  + id, (Number(c.pernoite)||0)        * (Number(cadastros.tabelaMO?.pernoite)||160));
+  upd('val-moamb-' + id, (Number(c.moAmbiental)||0)     * (Number(c.manobraMoAmb||cadastros.tabelaMO?.diaria_mo_ambiental)||180));
+  upd('val-sst-'   + id, (Number(c.sst)||0)             * (Number(c.manobraSST||cadastros.tabelaMO?.diaria_sst)||180));
+  upd('val-sup-'   + id, (Number(c.supervisorOp)||0)    * (Number(c.manobraSup||cadastros.tabelaMO?.diaria_supervisor)||220));
   
   // Update coleta result block
   const rc = calcColeta(c);
