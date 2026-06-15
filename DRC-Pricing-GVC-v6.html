@@ -1125,7 +1125,7 @@ function renderTabelaMOPanel() {
 function saveTabelaMO(key, val) {
   if (!cadastros.tabelaMO) cadastros.tabelaMO = {};
   cadastros.tabelaMO[key] = parseFloat(val) || 0;
-  save();
+  saveCadastros();
   toast('✅ Tabela MO atualizada', '#00c896');
 }
 
