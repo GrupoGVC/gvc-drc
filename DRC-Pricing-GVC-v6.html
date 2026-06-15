@@ -2358,7 +2358,7 @@ function calcDRC(drc) {
     lucroBruto, margemOD, margemADM, comissao, resultadoAntesIR,
     margem, liquido, lucroLiq,
     iss, pis, cofins, ir, csll,
-    recTransp, recDest, recLoc, recOp, despDest, despLoc, despOp
+    recTransp, recDest, recLoc, recOp, despTransp, despDest, despLoc, despOp
   };
 }
 
@@ -2791,7 +2791,10 @@ function renderForm() {
     '<div class="section-header">' +
       '<span class="section-icon">🚚</span>' +
       '<span class="section-title">Coleta e Transporte</span>' +
-      '<span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recTransp) + '</span>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-left:auto;">' +
+        '<span id="hdr-transp-total" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--retec);">' + fmt(r.recTransp) + '</span>' +
+        '<span id="hdr-transp-margin" style="font-family:var(--font-mono);font-size:0.65rem;padding:2px 7px;border-radius:10px;">' + (r.recTransp>0?((r.recTransp-r.despTransp)/r.recTransp*100).toFixed(1)+'%':'—') + '</span>' +
+      '</div>' +
     '</div>' +
     '<div class="section-body">' +
       '<div id="coletas-container">' + drc.coletas.map((c,i) => renderColeta(c,i)).join('') + '</div>' +
@@ -4090,6 +4093,11 @@ function refreshSectionHeaders() {
     if (!rec || rec <= 0) return 'rgba(90,101,119,.2)';
     return (rec - desp) / rec > 0.25 ? 'rgba(0,200,150,.25)' : 'rgba(245,166,35,.25)';
   };
+  // Transporte
+  const tT = document.getElementById('hdr-transp-total');
+  const tM = document.getElementById('hdr-transp-margin');
+  if (tT) tT.textContent = fmt(r.recTransp);
+  if (tM) { const p=(r.recTransp-r.despTransp)/r.recTransp; tM.textContent=fmtPct(r.recTransp,r.despTransp); tM.style.color=mColor(r.recTransp,r.despTransp); tM.style.background=mBg(r.recTransp,r.despTransp); tM.style.border='1px solid '+mBorder(r.recTransp,r.despTransp); }
   // Destinação
   const dT = document.getElementById('hdr-dest-total');
   const dM = document.getElementById('hdr-dest-margin');
