@@ -167,8 +167,8 @@ elseif($action==='get_cadastros' && $method==='GET'){
 }
 elseif($action==='save_cadastros' && $method==='POST'){
     require_auth(['gestor']); $b=body(); $cadastros=$b['cadastros']??null; if(!$cadastros) err('Dados inválidos');
-    $stmt=db()->prepare('UPDATE cadastros SET dados=? WHERE tipo=?');
-    foreach($cadastros as $tipo=>$lista) $stmt->execute([json_encode($lista,JSON_UNESCAPED_UNICODE),$tipo]);
+    $stmt=db()->prepare('INSERT INTO cadastros (tipo, dados) VALUES (?,?) ON DUPLICATE KEY UPDATE dados=VALUES(dados)');
+    foreach($cadastros as $tipo=>$lista) $stmt->execute([$tipo, json_encode($lista,JSON_UNESCAPED_UNICODE)]);
     ok();
 }
 // ── USUARIOS ─────────────────────────────────────────────
